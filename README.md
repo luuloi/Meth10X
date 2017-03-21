@@ -21,12 +21,14 @@ of these samples
   * [Biscuit]      https://github.com/zwdzwd/biscuit
   * [MethylSeekR]  https://github.com/Bioconductor-mirror/MethylSeekR
   * [Vcf-tools]    https://github.com/vcftools
+  * [fastqc]       http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
   * [trimCEGX]
   * [makeFullDataFrame]
   * [UCSC-format-file-converter]  http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/
   * [ggplot2]
 
 * Dependencies: [TODO]
+  * Java version >= 1.8
 
 * Installation: [TODO]
 
