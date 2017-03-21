@@ -1,0 +1,27 @@
+# track type="bedGraph" description="/home/phuluu/data/WGBS10X_new/Prostate_Brain/called/Adultbrain_bis_2_CEGX/Adultbrain_bis_2_CEGX.MD.strands CHH methylation levels"
+# chr1	54691	54692	0	0	1
+# chr1	54692	54693	0	0	1
+# chr1	54693	54694	0	0	1
+a = open("/home/phuluu/data/WGBS10X_new/Prostate_Brain/called/Adultbrain_bis_2_CEGX/Adultbrain_bis_2_CEGX.MD.strands_CHH.5.bedGraph")
+ncol = 6
+la = a.next()
+las = la.strip().split("\t")
+while(len(las) != ncol):
+	la = a.next()
+	las = la.strip().split("\t")
+
+g = open("/home/phuluu/Projects/WGBS10X_new/V02/annotations/hg19/hg19.CHH.strands.100.bed")
+for lg in g:
+	lgs = lg.strip().split("\t")
+	if lgs[1] == las[1]:
+		print lgs[0] + "\t" + lgs[1] + "\t" + las[4] + "\t" + str(int(las[4]) + int(las[5]))
+		las = ''
+		try:
+			while(len(las) != ncol):
+				la = a.next()
+				las = la.strip().split("\t")
+		except:
+			las = "noo"
+	else:
+		print lgs[0] + "\t" + lgs[1] + "\t" + "0" + "\t" + "0"
+
