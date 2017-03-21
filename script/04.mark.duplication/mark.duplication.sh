@@ -2,7 +2,6 @@
 
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
 source /etc/profile.d/modules.sh
 module load gi/java/jdk1.8.0_25
 module load phuluu/picard-tools/2.3.0
