@@ -8,10 +8,11 @@
 of these samples
 
 * WGBSX10 is built based on bash/python/R script, Bpipe and a collection of software packages:
-  * [bwa-meth] (http://effectif.com/nesta) "bwa-meth"
-  * bedtools
-  * MethylDackel
-  * Biscuit
-  * MethylSeekR
+  * [bwa-meth]     https://github.com/brentp/bwa-meth
+  * [bedtools]     https://github.com/arq5x/bedtools2
+  * [MethylDackel] https://github.com/dpryan79/MethylDackel
+  * Biscuit        https://github.com/zwdzwd/biscuit
+  * MethylSeekR    https://github.com/Bioconductor-mirror/MethylSeekR
   * trimCEGX
   * makeFullDataFrame
+  * UCSC-format-file-converter
