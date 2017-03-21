@@ -8,7 +8,7 @@
 of these samples
 
 * WGBSX10 is built based on bash/python/R script, Bpipe and a collection of software packages:
-  * [bwa-meth] (http://effectif.com/nesta)
+  * [bwa-meth] (http://effectif.com/nesta) "bwa-meth"
   * bedtools
   * MethylDackel
   * Biscuit
