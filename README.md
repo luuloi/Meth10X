@@ -10,6 +10,7 @@ of these samples
 * WGBSX10 helps to fasten the whole workflow of WGBS as well as enhance the accurate of methylation and SNP calling.
 
 * WGBSX10 is built based on in-house bash/python/perl/R script, Bpipe and a collection of software packages:
+  * [bwa]          https://github.com/lh3/bwa
   * [bwa-meth]     https://github.com/brentp/bwa-meth
   * [samtools]     https://github.com/samtools/
   * [tabix]        https://github.com/samtools/tabix
