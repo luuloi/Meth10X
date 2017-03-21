@@ -11,8 +11,9 @@ of these samples
   * [bwa-meth]     https://github.com/brentp/bwa-meth
   * [bedtools]     https://github.com/arq5x/bedtools2
   * [MethylDackel] https://github.com/dpryan79/MethylDackel
-  * Biscuit        https://github.com/zwdzwd/biscuit
-  * MethylSeekR    https://github.com/Bioconductor-mirror/MethylSeekR
-  * trimCEGX
-  * makeFullDataFrame
-  * UCSC-format-file-converter
+  * [Biscuit]      https://github.com/zwdzwd/biscuit
+  * [MethylSeekR]  https://github.com/Bioconductor-mirror/MethylSeekR
+  * [trimCEGX]
+  * [makeFullDataFrame]
+  * [UCSC-format-file-converter]
+  * [ggplot2]
