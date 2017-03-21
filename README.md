@@ -17,6 +17,7 @@ of these samples
   * [SAMStat]      http://samstat.sourceforge.net/
   * [picardtools]  https://github.com/broadinstitute/picard
   * [bedtools]     https://github.com/arq5x/bedtools2
+  * [bamUtil]      https://github.com/statgen/bamUtil
   * [MethylDackel] https://github.com/dpryan79/MethylDackel
   * [Biscuit]      https://github.com/zwdzwd/biscuit
   * [MethylSeekR]  https://github.com/Bioconductor-mirror/MethylSeekR
