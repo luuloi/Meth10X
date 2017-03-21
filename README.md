@@ -11,6 +11,7 @@ of these samples
 
 * WGBSX10 is built based on bash/python/R script, Bpipe and a collection of software packages:
   * [bwa-meth]     https://github.com/brentp/bwa-meth
+  * [picardtools]  https://github.com/broadinstitute/picard
   * [bedtools]     https://github.com/arq5x/bedtools2
   * [MethylDackel] https://github.com/dpryan79/MethylDackel
   * [Biscuit]      https://github.com/zwdzwd/biscuit
