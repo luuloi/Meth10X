@@ -1,0 +1,481 @@
+// trim_fastq
+trim_fastq = {
+	output.dir = "raw_trimmed/" + input1.split("/")[1] + "/" + input1.split("/")[2] + "_trimmed"
+	lane_name = input1.split("/")[2]
+	produce(lane_name + "_trimmed_R1.fastq.gz", lane_name + "_trimmed_R2.fastq.gz"){
+			exec """ mkdir -p "$output.dir"; bash "$BASEDIR/script/02.trim.fastq/trim.CEGX_new.sh" "$input1" "$output1" "$input2" "$output2" "$output.dir" """, "trim_fastq"
+	}
+}
+
+// alignment_and_mark_duplication
+alignment_and_mark_duplication = {
+	output.dir = "aligned/" + input1.split("/")[1] + "/" + input1.split("/")[2]
+	def prefix = input1.split("/")[3].replaceAll("_R1.fastq.gz", "")
+	def output_temp = output.dir + "/" + prefix + ".align.bam"
+	produce(prefix+'.bam', prefix+'.bai'){
+		exec """ bash "$BASEDIR/script/03.alignment/bwameth.align.sh" "$input1" "$input2" "$GENOME" "$output.dir" "$N_CORES" """, "alignment"
+		exec """ bash "$BASEDIR/script/04.mark.duplication/mark.duplication.sh" "$output_temp" "$output.dir" """, "mark_duplication"
+	}
+}
+
+// check_marked_dup_and_rm_unmarked_lane_bam
+check_marked_dup_and_rm_unmarked_lane_bam = {
+	from('.bam', '.bai') transform('.clean'){
+	    output.dir = "aligned/" + input1.split("/")[1] + "/" + input1.split("/")[2]
+		check {
+			exec """ bash "$BASEDIR/script/04.mark.duplication/check_marked_dup_and_rm_unmarked_lane_bam.sh" "$input1.bam" "$output.dir" """, "check_marked_dup_lane_bam_and_rm_unmarked_lane_bam"
+		} otherwise {
+			fail """ The bam file "$input" is corrupted! """
+		}
+	}
+	forward inputs	
+}
+
+
+// compute_statistics_lane_bam
+flagstat_lane = {
+	output.dir = "aligned/" + input1.split("/")[1] + "/" + input1.split("/")[2]
+	from('.bam', '.bai') transform('.flagstat'){
+		exec """ bash "$BASEDIR/script/05.compute.statistics.lane.bam/flagstat.sh" "$input1.bam" "$output.dir" """, "flagstat_lane"
+	}
+	forward inputs
+}
+
+assessing_bias_lane = {
+	output.dir = "aligned/" + input1.split("/")[1] + "/" + input1.split("/")[2]
+	def lane = input1.split("/")[2]                     
+	from('.bam', '.bai') produce(lane+'.MD.bias.txt', lane+'.MD.bias_OB.svg', lane+'.MD.bias_OT.svg'){
+		exec """ bash "$BASEDIR/script/05.compute.statistics.lane.bam/assessing.bias.sh" "$input1.bam" "$output.dir" "$GENOME" """, "assessing_bias_lane"
+	}
+	forward inputs
+}
+
+
+// move_lane_bam
+move_lane_bam = {
+	def sample = input.split("/")[-3]
+	output.dir = "aligned/" + sample
+	from('.bam', '.bai') produce(sample + ".move"){
+        exec """ echo "$input" >> "$output" """, "move_lane_bam"
+    }
+}
+
+// merge_lane_bam
+merge_lane_bam = {
+	output.dir = "merged/" + input.split("/")[-1].replaceAll(".move","")
+	from('.move') transform('.bam', '.bam.bai'){
+		exec """ bash "$BASEDIR/script/06.merge.lane.bam/merge.lane.bam.sh" "$input" "$output.dir" """, "merge_lane_bam"
+	}
+}
+
+// check_sample_bam
+check_sample_bam = {
+	output.dir = "merged/" + input.split("/")[1]
+	from('.bam', '.bam.bai') {
+		check {
+			exec """ bash "$BASEDIR/script/07.check.sample.bam/check.sample.bam.header.sh" "$input.bam" "$output.dir" """, "check_sample_bam"
+		} otherwise {
+			fail """ The bam file "$input" is corrupted! """
+		}
+	}
+	forward inputs	
+}
+
+
+// clip_bam
+clip_bam = {
+	output.dir = "merged/" + input1.split("/")[-2]
+	from('.bam', '.bam.bai') transform('.clip.bam'){
+		exec """ bash "$BASEDIR/script/07.check.sample.bam/clip.bam.sh" "$input.bam" "$output.dir" """, "clip_bam"
+	}
+	forward inputs	
+}
+
+extracted_chrom_sizes_from_sample_bam = {
+	output.dir = "merged/" + input1.split("/")[-2]
+	from('.bam', '.bam.bai') transform('.chrom.sizes'){
+		exec """ bash "$BASEDIR/script/07.check.sample.bam/extracted.chrom.sizes.from.sample.bam.sh" "$input.bam" "$output.dir" """, "extracted_chrom_sizes_from_sample_bam"
+	}
+	forward inputs	
+}
+
+
+// compute_statistics_make_bigwig_sample_bam
+flagstat = {
+	output.dir = "merged/" + input1.split("/")[-2]
+	from('.bam', '.bam.bai') transform('.flagstat'){
+		exec """ bash "$BASEDIR/script/08.compute.statistics.make.bigwig.sample.bam/flagstat.sh" "$input.bam" "$output.dir" """, "flagstat"
+	}
+	forward inputs
+}
+
+assessing_bias = {
+	output.dir = "merged/" + input1.split("/")[-2]
+	def sample = input1.split("/")[-2]
+	from('.bam', '.bam.bai') produce(sample+'.MD.bias.txt', sample+'.MD.bias_OB.svg', sample+'.MD.bias_OT.svg'){
+		exec """ bash "$BASEDIR/script/08.compute.statistics.make.bigwig.sample.bam/assessing.bias.sh" "$input.bam" "$output.dir" "$GENOME" """, "assessing_bias"
+	}
+}
+
+count_mapq_score = {
+	output.dir = "merged/" + input1.split("/")[-2]
+	from('.bam', '.bam.bai') transform('.mapq'){
+		exec """ bash "$BASEDIR/script/08.compute.statistics.make.bigwig.sample.bam/count.mapq.score.sh" "$input.bam" "$output.dir" """, "count_mapq_score"
+	}
+}
+
+create_bigwig = {
+	output.dir = "merged/" + input1.split("/")[-2]
+	from('.bam', '.bam.bai') transform('.coverage.bw', '.depth'){
+		exec """ bash "$BASEDIR/script/08.compute.statistics.make.bigwig.sample.bam/create.bigwig.sh" "$input.bam" "$output.dir" """, "create_bigwig"
+	}
+}
+
+qualimap = {
+	def sample = input1.split("/")[-2] 
+	output.dir = "merged/" + sample + "/QC"
+	from('.bam', '.bam.bai') produce(sample + '.html', 'genome_results.txt'){
+		exec """ bash "$BASEDIR/script/08.compute.statistics.make.bigwig.sample.bam/qualimap.sh" "$input.bam" "$output.dir" """, "qualimap"
+	}
+}
+
+
+// // // dnameth_a_snp_calling1
+// methyldackel_CpG_merge
+methyldackel_extract_merge_context = {
+	output.dir = "called/" + input1.split("/")[-2]
+	from('.bam', '.bam.bai') transform('.methyldackel.merge.context.log'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/methyldackel.extract.merge.context.sh" "$input.bam" "$output.dir" "$GENOME" """, "methyldackel_extract_merge_context"
+	}
+}
+
+methyldackel_CpG_merge_make_full_frame = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.methyldackel.merge.context.log') to('.MD_CpG.tsv.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/methyldackel.CpG_merge.make.full.frame.sh" "$input" "$output.dir" "$GENOME" """, "methyldackel_CpG_merge_make_full_frame"
+	}
+}
+
+
+// methyldackel_CpG_strand
+methyldackel_extract_strand = {
+	output.dir = "called/" + input1.split("/")[-2]
+	from('.bam', '.bam.bai') transform('.methyldackel.extract.strand.log'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/methyldackel.extract.strand.sh" "$input.bam" "$output.dir" "$GENOME" """, "methyldackel_extract_strand"
+	}
+}
+
+methyldackel_CpG_strand_make_full_frame = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.methyldackel.extract.strand.log') to('.MD.strands_CpG.tsv.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/methyldackel.CpG_strand.make.full.frame.sh" "$input" "$output.dir" "$GENOME" """, "methyldackel_CpG_strand_make_full_frame"
+	}
+}
+
+methyldackel_CpG_strand_only_lambda = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.MD_CpG.tsv.gz') to('.MD.strands_lambda.tsv.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/methyldackel.CpG_strand.only.lambda.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" """, "methyldackel_CpG_strand_only_lambda"
+	}
+	forward inputs
+}
+
+
+//biscuit
+biscuit_pileup = {
+	output.dir = "called/" + input1.split("/")[-2]
+	from('.bam', '.bam.bai') transform('.BC.vcf.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.pileup.sh" "$input.bam" "$output.dir" "$GENOME" """, "biscuit_pileup"
+	}
+}
+
+biscuit_vcf2bed_CpG = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.BC.vcf.gz') to('.BC.CpG.bed.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.vcf2bed.CpG.sh" "$input.BC.vcf.gz" "$output.dir" "$GENOME" """, "biscuit_vcf2bed_CpG"
+	}
+}
+
+biscuit_vcf2bed_SNP = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.BC.vcf.gz') to('.biscuit.vcf2bed.SNP.log'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.vcf2bed.SNP.sh" "$input.BC.vcf.gz" "$output.dir" "$GENOME" """, "biscuit_vcf2bed_SNP"
+	}
+}
+
+biscuit_convert_SNP_bed_to_vcf = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.biscuit.vcf2bed.SNP.log') to('.BC.snp.vcf.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.convert.SNP.bed.to.vcf.sh" "$input" "$output.dir" "$GENOME" """, "biscuit_convert_SNP_bed_to_vcf"
+	}
+}
+
+biscuit_SNP_vcf_stats = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.BC.snp.vcf.gz') to('.BC.snp.vcf.gz.stats.tsv'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.SNP.vcf.stats.sh" "$input.BC.snp.vcf.gz" "$output.dir" "$GENOME" """, "biscuit_SNP_vcf_stats"
+	}
+	forward inputs
+}
+
+
+// dnameth_a_snp_calling2	
+methyldackel_CHH = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.methyldackel.extract.strand.log') to('.MD.strands_CHH.tsv.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/methyldackel.CHH.sh" "$input" "$output.dir" "$GENOME" """, "methyldackel_CHH"
+	}
+}
+
+methyldackel_CHG = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.methyldackel.extract.strand.log') to('.MD.strands_CHG.tsv.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/methyldackel.CHG.sh" "$input" "$output.dir" "$GENOME" """, "methyldackel_CHG"
+	}
+}
+
+methyldackel_compute_meth_average = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.MD_CpG.tsv.gz') to('.MD.meth.summarize.txt'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/methyldackel.compute.methyl.average.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" """, "methyldackel_compute_meth_average"
+	}
+	forward inputs
+}
+
+filter_snp = {
+	output.dir = "called/" + input1.split("/")[-2]
+	def sample = input1.split("/")[-2]
+	from('.BC.snp.vcf.gz') produce(sample+'.snp.filter.summary.txt',sample+'.MD_CpG.tsv.filter.out.snp.tsv.gz'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/filter.snp.sh" "$input.BC.snp.vcf.gz" "$output.dir" "$GENOME" """, "filter_snp"
+	}
+	forward inputs
+}
+
+MethylSeekR = {
+	output.dir = "bigTable/bw/MethylSeekR/"
+	def sample = input1.split("/")[-2]
+	from('.MD_CpG.tsv.gz') produce(sample+'.PMD.bed', sample+'.UMR.bed', sample+'.LMR.bed', sample+'.PMD.LMR.bed', sample+'.PMD.UMR.bed', sample+'.PMD.stats'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/MethylSeekR.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" """, "MethylSeekR"
+	}
+}
+
+
+// dnameth_a_snp_calling3
+meth_calling_clean = {
+	output.dir = "called/" + input1.split("/")[-2]
+	transform('.MD_CpG.tsv.gz') to('.meth.calling.clean.log'){
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/meth.calling.clean.sh" "$input.gz" "$output.dir" "$GENOME" """, "meth_calling_clean"
+	}
+	forward inputs
+}
+
+
+// // CpG_per_sample_process
+// make_bigwig_CpG
+make_bigwig_CpG_coverage = {
+	output.dir = "bigTable/bw"
+	transform('.MD_CpG.tsv.gz') to('.cov.bw'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.coverage.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV" """, "make_bigwig_CpG_coverage"
+	}
+}
+
+make_bigwig_CpG_meth_ratio = {
+	output.dir = "bigTable/bw"
+	transform('.MD_CpG.tsv.gz') to('.bw'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV" """, "make_bigwig_CpG_meth_ratio"
+	}
+}
+
+make_bigwig_CpG_meth_ratio_smooth = {
+	output.dir = "bigTable/bw/smoothed"
+	def sample = input1.split("/")[-1].split("\\.")[0]
+	from('.cov.bw') produce(sample+'.100bp.bw',sample+'.1kb.bw',sample+'.10kb.bw',sample+'.100kb.bw'){
+		multi make_bigwig_CpG_meth_ratio_100bp: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.100bp.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV" "$output" """,
+		make_bigwig_CpG_meth_ratio_1kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.1kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV" """,
+		make_bigwig_CpG_meth_ratio_10kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.10kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV" """,
+		make_bigwig_CpG_meth_ratio_100kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.100kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV" """
+	}
+	forward inputs
+}
+
+make_bigwig_CpG_clear = {
+	output.dir = "bigTable/bw"
+	transform('.cov.bw') to('.make.bigwig.CpG.clean.log'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.clean.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV" """, "make_bigwig_CpG_clear"
+	}
+}
+
+
+// CpGibias_and_compute_distribution
+compute_meth_ratio = {
+	output.dir = "bigTable/QC/distributions"
+	// actual output file is ".methratio.bed", but only use once
+	transform('.MD_CpG.tsv.gz') to('.compute.meth.ratio.log'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/compute.meth.ratio.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """, "compute_meth_ratio"
+	}
+	forward inputs
+}
+
+compute_distribution_CpG_coverage_per_chrom = {
+	output.dir = "bigTable/QC/distributions"
+	transform('.MD_CpG.tsv.gz') to('.CpG.coverage.per.chrom.tsv'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/compute.distribution.CpG.coverage.per.chrom.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """, "compute_distribution_CpG_coverage_per_chrom"
+	}
+	forward inputs
+}
+
+CpG_meth_distribution = {
+	output.dir = "bigTable/QC/distributions"
+	def sample = input1.split("/")[-2]
+	from('.MD_CpG.tsv.gz') produce(sample+'.distribution.Single_CpGs.tsv', sample+'.distribution.100bp.tsv', sample+'.distribution.CpGislands.tsv'){
+
+		multi CpG_meth_distribution_single: """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/single.CpG.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """,
+		      CpG_meth_distribution_100pb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/100bp.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """, 
+		      CpG_meth_distribution_1kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/1kb.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """,
+		      CpG_meth_distribution_10kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/10kb.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """,
+		      CpG_meth_distribution_100kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/100kb.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """,
+		      CpG_meth_distribution_CpGisland: """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/CpGisland.meth.ratio.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """,
+		      CpG_meth_distribution_CpGshore: """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/CpGshores.meth.ratio.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """,
+		      CpG_meth_distribution_Other: """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/others.meth.ratio.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """
+	}
+}
+
+CpGisland_coverage_bias = {
+	output.dir = "bigTable/QC/distributions"
+	def sample = input1.split("/")[-2]
+	from('.MD_CpG.tsv.gz') produce(sample+'.CpG_bias.tsv', sample+'.CpG.bias.plot.tsv'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/CpGisland.coverage.bias.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """, "CpGisland_coverage_bias"
+	}
+	forward inputs
+}
+
+distribution_and_bias_clean = {
+	output.dir = "bigTable/QC/distributions"
+	transform('.MD_CpG.tsv.gz') to('.clean'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/102.CpGibias.and.compute.distribution/distribution_and_bias_clean.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/distributions" "$GENOME" """, "distribution_and_bias_clean"
+	}
+}
+
+
+compute_CpG_coverage_per_sample = {
+	output.dir = "bigTable/QC/per-sample"
+	transform('.MD_CpG.tsv.gz') to('.CpG.coverage.tsv'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/103.plot.per.sample/compute.CpG.coverage.per.sample.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/per-sample" """, "compute_CpG_coverage_per_sample"
+	}
+	forward inputs
+}
+
+
+// make_merge_bigTable_file
+make_merge_bigTable_file = {
+	output.dir = "bigTable/merge"
+	from('.MD_CpG.tsv.gz') transform('.MD_CpG.merge', '.MD.strands_CpG.merge', '.MD.strands_CHG.merge', '.MD.strands_CHH.merge', '.MD.strands_lambda.merge', '.BC.snp.vcf.merge'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/103.plot.per.sample/make.merge.bigTable.file.sh" "$input.MD_CpG.tsv.gz" "$output.dir" """, "make_merge_bigTable_file"
+	}
+}
+
+plot_coverage_per_chromosome_and_sample = {
+	output.dir = "bigTable/QC/per-sample"
+	def sample = "$input.gz".split("/")[-2]
+	from('.MD_CpG.tsv.gz') produce(sample+'.CpG.coverage.svg', sample+'.CpG.bias.png', sample+'.chromosome.CpG.coverage.png'){
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/103.plot.per.sample/plot.coverage.per.chromosome.and.sample.sh" "$input.MD_CpG.tsv.gz" "bigTable/QC/per-sample" """, "plot_coverage_per_chromosome_and_sample"
+	}
+}
+
+
+// make_bigTable
+bigTable_tsv_gz = {
+	output.dir = "bigTable"
+	produce('bigTable.tsv.gz'){
+	exec """ bash "$BASEDIR/script/11.bigTables/MD_CpG.merge.sh" "$inputs" "$output.dir" """, "bigTable_tsv_gz"
+	}
+}
+
+bigTable_strand_tsv_gz = {
+	output.dir = "bigTable"
+	produce('bigTable.strand.tsv.gz'){
+	exec """ bash "$BASEDIR/script/11.bigTables/MD.strands_CpG.merge.sh" "$inputs" "$output.dir" """, "bigTable_strand_tsv_gz"
+	}
+}
+
+bigTable_lambda_strand_tsv_gz = {
+	output.dir = "bigTable"
+	produce('bigTable.lambda.strand.tsv.gz'){
+	exec """ bash "$BASEDIR/script/11.bigTables/MD.strands_lambda.merge.sh" "$inputs" "$output.dir" """, "bigTable_lambda_strand_tsv_gz"
+	}
+}
+
+bigTable_snp_vcf_gz = {
+	output.dir = "bigTable"
+	produce('bigTable.snp.vcf.gz'){
+	exec """ bash "$BASEDIR/script/11.bigTables/BC.snp.vcf.merge.sh" "$inputs" "$output.dir" """, "bigTable_snp_vcf_gz"
+	}
+}
+
+bigTable_CHG_strand_tsv_gz = {
+	output.dir = "bigTable"
+	produce('bigTable.CHG.strand.tsv.gz'){
+	exec """ bash "$BASEDIR/script/11.bigTables/MD.strands_CHG.merge.sh" "$inputs" "$output.dir" """, "bigTable_CHG_strand_tsv_gz"
+	}
+}
+
+bigTable_CHH_strand_tsv_gz = {
+	output.dir = "bigTable"
+	produce('bigTable.CHH.strand.tsv.gz'){
+	exec """ bash "$BASEDIR/script/11.bigTables/MD.strands_CHH.merge.sh" "$inputs" "$output.dir" """, "bigTable_CHH_strand_tsv_gz"
+	}
+}
+
+
+// plot_merge
+mds_plot_single_CpG = {
+	output.dir = "bigTable/QC/MDS/"
+	from('bigTable.tsv.gz') produce('Single_CpGs.01.svg', 'Single_CpGs.02.svg', 'Single_CpGs.03.svg'){
+		exec """ bash "$BASEDIR/script/12.plot.merge/mds.plot.single.CpG.sh" "$input.gz" "$output.dir" """, "mds_plot_single_CpG"
+	}
+	forward inputs
+}
+
+mds_plot_smooth_CpG = {
+	output.dir = "bigTable/QC/MDS/"
+	from('bigTable.tsv.gz') produce('100bp.01.svg', '100bp.02.svg','100bp.03.svg'){
+		exec """ bash "$BASEDIR/script/12.plot.merge/mds.plot.smooth.CpG.sh" "$input.gz" "$output.dir" """, "mds_plot_smooth_CpG"
+	}
+}
+
+DNA_meth_distribution_plot_each_CpG = {
+	output.dir = "bigTable/QC/distributions/"
+	from('bigTable.tsv.gz') produce('100bp.svg', '100kb.svg', '10kb.svg', '1kb.svg', 'CpGislands.svg', 'others.svg', 'CpGshores.svg', 'Single_CpGs.svg'){
+		exec """ bash "$BASEDIR/script/12.plot.merge/DNA.meth.distribution.plot.each.CpG.sh" "$input.gz" "$output.dir" """, "DNA_meth_distribution_plot_each_CpG"
+	}
+}
+
+Whole_genome_coverage_plot_only_CpG = {
+	output.dir = "bigTable/QC"
+	from('bigTable.tsv.gz') produce('CpG.coverage.svg'){
+		exec """ bash "$BASEDIR/script/12.plot.merge/Whole.genome.coverage.plot.only.CpG.sh" "$input.gz" "$output.dir" """, "Whole_genome_coverage_plot_only_CpG"
+	}
+}
+
+Whole_genome_coverage_plot = {
+	output.dir = "bigTable/QC"
+	from('bigTable.tsv.gz') produce('whole.genome.coverage.svg'){
+	exec """ bash "$BASEDIR/script/12.plot.merge/Whole.genome.coverage.plot.sh" "$input.gz" "$output.dir" """, "Whole_genome_coverage_plot"
+	}
+}
+
+merge_CpG_bias = {
+	output.dir = "bigTable/QC"
+	produce("CpG_bias.tsv"){
+		exec """ bash "$BASEDIR/script/12.plot.merge/merge.CpG.bias.sh" "bigTable/QC/distributions/" "$output.dir" """, "merge_CpG_bias"
+	}
+}
+
+
+// make_html_report
+make_html_report = {
+	output.dir = "bigTable"
+	from('bigTable.tsv.gz') produce("QC_Report.html"){
+		exec """ bash "$BASEDIR/script/13.make.html.report/make.html.report.sh" "$input.gz" "$output.dir" """
+	}
+}
