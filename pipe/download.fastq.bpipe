@@ -1,0 +1,40 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+// WGBS10X: Download fastq files from NCI
+//
+/////////////////////////////////////////////////////////////////////////////////
+
+about title: "WGBS10X: Alignment and DNA methylation/SNP calling "
+
+// Load the default configuration: path to packages, modules, genome index, CpG coordinates...
+load SYSTEM_CONFIG
+
+// export PATH=/home/darloluu/bin/bpipe-0.9.9.2/bin:$PATH
+
+
+// download_fastq
+download_fastq = {
+	// printf "Input1 = " + "$input1" + "\n"
+	// printf "Input2 = " + "$input2" + "\n"
+	output.dir = "raw/" + "$input1".split("/")[1] + "/" + "$input1".split("/")[2]
+	transform(".gz",".gz"){
+		uses(threads:2) {
+			multi download_fastq1: """ bash "$BASEDIR/script/00.download.fastq/download.data.from.nci.to.wolfpack.rsync.sh" "$input1" """,
+			download_fastq2: """ bash "$BASEDIR/script/00.download.fastq/download.data.from.nci.to.wolfpack.rsync.sh" "$input2" """
+		}
+	}
+}
+
+// check_fastq
+check_fastq = {
+	output.dir = "raw/" + "$input1".split("/")[1] + "/" + "$input1".split("/")[2]
+	transform(".fastq.gz",".fastq.gz") to('_fastqc.zip', '_fastqc.zip'){
+		multi check_fastq1: """ bash "$BASEDIR/script/01.check_fastq/check_fastq.sh" "$input1" "$output.dir" """, 
+			  check_fastq2: """ bash "$BASEDIR/script/01.check_fastq/check_fastq.sh" "$input2" "$output.dir" """
+	}
+}
+
+
+run { "%_R*.fastq.sh" * [ download_fastq + check_fastq ] }
+
+

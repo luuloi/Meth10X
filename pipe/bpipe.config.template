@@ -1,0 +1,384 @@
+executor = "sge"
+procs = "smp 1"
+sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+// https://github.com/ssadedin/bpipe/blob/master/src/main/groovy/bpipe/Concurrency.groovy
+max_per_command_threads=1000
+// https://github.com/ssadedin/bpipe/blob/master/src/main/groovy/bpipe/Config.groovy
+maxThreads=1000
+maxProcs=1000
+
+commands {
+	// download_fastq
+	download_fastq1 {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -q short.q -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	download_fastq2 {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -q short.q -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// check_fastq
+	check_fastq1 {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	check_fastq2 {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// 02.trim.fastq
+	trim_fastq {
+		executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// 04.mark.duplication
+	mark_duplication {
+		executor = "sge"
+		procs = "smp 12"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// check_marked_dup_lane_bam_and_rm_unmarked_lane_bam
+	check_marked_dup_and_rm_unmarked_lane_bam {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// 05.compute.statistics.lane.bam
+	flagstat_lane {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	assessing_bias_lane {
+		executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// move_lane_bam
+	move_lane_bam {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// 06.merge.lane.bam
+	merge_lane_bam {
+		executor = "sge"
+		procs = "smp 12"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// 07.check.sample.bam
+	check_sample_bam {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// clip_sample_bam
+	extracted_chrom_sizes_from_sample_bam {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	clip_bam {
+		executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	// 08.compute.statistics.make.bigwig.sample.bam
+	flagstat {
+		executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+	assessing_bias {
+		executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+	}
+    count_mapq_score {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    create_bigwig {
+        executor = "sge"
+		procs = "smp 3"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    qualimap {
+        executor = "sge"
+		procs = "smp 8"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    // 09.dnameth.a.snp.calling
+    methyldackel_extract_merge_context {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    methyldackel_CpG_merge_make_full_frame {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    methyldackel_extract_strand {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    methyldackel_CpG_strand_make_full_frame {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    methyldackel_CpG_strand_only_lambda {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    methyldackel_CHH {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    methyldackel_CHG {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    methyldackel_compute_meth_average {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    MethylSeekR {
+    	executor = "sge"
+		procs = "smp 13"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    filter_snp {
+    	executor = "sge"
+		procs = "smp 3"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    meth_calling_clean {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    biscuit_pileup {
+        executor = "sge"
+		procs = "smp 16"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    biscuit_vcf2bed_CpG {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    biscuit_vcf2bed_SNP {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    biscuit_convert_SNP_bed_to_vcf {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    biscuit_SNP_vcf_stats {
+        executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    biscuit_zip {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    // 10.CpG.per.sample.process
+    // make_bigwig_CpG
+    make_bigwig_CpG_coverage {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    make_bigwig_CpG_meth_ratio {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    make_bigwig_CpG_meth_ratio_100bp {
+        executor = "sge"
+		procs = "smp 6"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    make_bigwig_CpG_meth_ratio_1kb {
+        executor = "sge"
+		procs = "smp 6"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    make_bigwig_CpG_meth_ratio_10kb {
+        executor = "sge"
+		procs = "smp 6"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    make_bigwig_CpG_meth_ratio_100kb {
+        executor = "sge"
+		procs = "smp 6"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    make_bigwig_CpG_clear {
+        executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    // CpGibias_and_compute_distribution 
+    compute_meth_ratio {
+    	executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    compute_distribution_CpG_coverage_per_chrom {
+    	executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpG_meth_distribution_single {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpG_meth_distribution_100pb {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpG_meth_distribution_1kb {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpG_meth_distribution_10kb {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpG_meth_distribution_100kb {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpG_meth_distribution_CpGisland {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpG_meth_distribution_CpGshore {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpG_meth_distribution_Other {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    CpGisland_coverage_bias {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    distribution_and_bias_clean {
+    	executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    compute_CpG_coverage_per_sample {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    // make_merge_bigTable_file
+    make_merge_bigTable_file {
+    	executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    plot_coverage_per_chromosome_and_sample {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    // make_bigTable
+    bigTable_tsv_gz {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    bigTable_strand_tsv_gz {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    bigTable_lambda_strand_tsv_gz {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    bigTable_snp_vcf_gz {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    bigTable_CHG_strand_tsv_gz {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    bigTable_CHH_strand_tsv_gz {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    // 12.plot.merge 
+    mds_plot_single_CpG {
+    	executor = "sge"
+		procs = "smp 8"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    mds_plot_smooth_CpG {
+    	executor = "sge"
+		procs = "smp 4"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    DNA_meth_distribution_plot_each_CpG {
+    	executor = "sge"
+		procs = "smp 2"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    Whole_genome_coverage_plot_only_CpG {
+    	executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    Whole_genome_coverage_plot {
+    	executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    merge_CpG_bias {
+    	executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }
+    // 13.make.html.report
+    make_html_report {
+    	executor = "sge"
+		procs = "smp 1"
+		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
+    }

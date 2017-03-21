@@ -1,0 +1,457 @@
+```{r preparation, echo=FALSE, warning=FALSE, message=FALSE}
+library(RColorBrewer)
+library(reshape2)
+library(IRanges)
+library(ggplot2)
+library(knitr)
+library(xtable)
+library(rtracklayer)
+
+options(scipen=100)
+basedir <- gsub("bigTable.*", "", Sys.getenv("PWD"))
+project <- gsub(".*/", "", sub("/bigTable", "", getwd()))
+samples <- read.csv("project.csv", stringsAsFactors=FALSE)
+if ("Pairs" %in% names(samples)) {
+    samples <- output <- samples[order(samples$Group, samples$Pairs, samples$Sample),]
+} else {
+    samples <- output <- samples[order(samples$Group, samples$Sample),]
+}
+if (all(output$Sample==output$Group)) output <- output[,1, drop=FALSE]
+
+NOMe <- file.exists("bigTable.GCH.tsv")
+
+# Make up sample colours
+groups <- unique(samples$Group)
+names(groups) <- groups
+cols <- brewer.pal(length(groups), "Paired")
+names(cols) <- groups
+samples$col <- cols[samples$Group]
+
+# shortcut for *applys
+samps <- samples$Sample
+names(samps) <- samps
+
+# read mapping qual distributions
+mapq <- sapply(samps, function(x) {
+    res <- rep(0, 61) #mapq goes from 0-60
+    names(res) <- 0:60
+    tmp <- read.table(paste0(basedir, "merged/", x, "/", x, ".mapq"))
+    res[as.character(tmp[[2]])] <- tmp[[1]]
+    res
+})
+
+output[["No Reads"]] <- prettyNum(colSums(mapq), big.mark=",")
+output[["Mapped Reads % (mapq >= 40)"]] <- paste0(round(colSums(mapq[41:61,,drop=FALSE])/colSums(mapq)*100, 1), "%")
+
+# read duplicate information
+# output[["Duplicate Read %"]] <- sapply(samps, function(x) {
+#     tmp <- readLines(paste0(basedir, "merged/", x, "/", x, ".flagstat"))[1:2]
+#     tmp <- as.integer(gsub(" .*", "", tmp))
+#     paste0(signif(tmp[2]/tmp[1]*100, 2), "%")
+# })
+output[["Duplicate Read %"]] <- sapply(samps, function(x) {
+    tmp <- readLines(paste0(basedir, "merged/", x, "/", x, ".flagstat"))
+    total_pass <- grep(" in total ", tmp, value=TRUE)
+    total_pass <- as.integer(gsub(" .*", "", total_pass))
+    total_dup <- grep(" duplicates", tmp, value=TRUE)
+    total_dup <- as.integer(gsub(" .*", "", total_dup))
+    paste0(signif(total_dup/total_pass*100, 2), "%")
+})
+
+
+# fragment sizes
+frags <- sapply(samps, function(x) {
+    res <- rep(0, 401) # Assess from 0 to 400bp
+    names(res) <- 0:400
+    tmp <- read.table(paste0(basedir, "merged/", x, "/QC/raw_data_qualimapReport/insert_size_histogram.txt"))
+    tmp <- tmp[tmp[[1]]<=400,]
+    res[as.character(tmp[[1]])] <- tmp[[2]]
+    res
+})
+
+output[["Fragment size (stdev)"]] <- sapply(samps, function(x) {
+    tmp <- Rle(1:400, frags[-1,x])
+    paste0(round(mean(tmp)), "bp (", round(sd(tmp)), "bp)")
+})
+
+output[["Times coverage (mean)"]] <- sapply(samps, function(x) {
+    tmp <- readLines(paste0(basedir, "merged/", x, "/", x, ".depth"))[2]
+    paste0(round(as.numeric(gsub(".* ", "", tmp)), 2), "x")
+})
+
+if (!NOMe) {
+    output[["Methylation % at CpGs"]] <- sapply(samps, function(x) {
+        tmp <- readLines(paste0(basedir, "called/", x, "/", x, ".MD.meth.summarize.txt"))
+        tmp <- tmp[grep("^CG:", tmp)]
+        paste0(round(as.numeric(gsub("%", "", gsub(".*\t", "", tmp))), 2), "%")
+    })
+
+    output[["Methylation % at non-CpGs"]] <- sapply(samps, function(x) {
+        tmp <- readLines(paste0(basedir, "called/", x, "/", x, ".MD.meth.summarize.txt"))
+        tmp <- tmp[grep("^CH:", tmp)]
+        paste0(round(as.numeric(gsub("%", "", gsub(".*\t", "", tmp))), 2), "%")
+    })
+} else {
+    output[["Methylation % at CpGs"]] <- sapply(samps, function(x) {
+        tmp <- readLines(paste0(basedir, "called/", x, "/", x, ".bissnp.meth.vcf.MethySummarizeList.txt"))
+        tmp <- tmp[grep("^WCG:", tmp)]
+        paste0(round(as.numeric(gsub("%", "", gsub(".*\t", "", tmp))), 2), "%")
+    })
+
+    output[["Methylation % at GpCs"]] <- sapply(samps, function(x) {
+        tmp <- readLines(paste0(basedir, "called/", x, "/", x, ".bissnp.meth.vcf.MethySummarizeList.txt"))
+        tmp <- tmp[grep("^GCH:", tmp)]
+        paste0(round(as.numeric(gsub("%", "", gsub(".*\t", "", tmp))), 2), "%")
+    })
+
+    output[["Methylation % at non-CpGs/GpCs"]] <- sapply(samps, function(x) {
+        tmp <- readLines(paste0(basedir, "called/", x, "/", x, ".bissnp.meth.vcf.MethySummarizeList.txt"))
+        tmp <- tmp[grep("^HCH:", tmp)]
+        paste0(round(as.numeric(gsub("%", "", gsub(".*\t", "", tmp))), 2), "%")
+    })
+}
+## Lambda analysis
+lambda <- read.table("bigTable.lambda.strand.tsv.gz", header=TRUE, check.names=FALSE)
+output[["Lambda non-conversion (mean coverage)"]] <- sapply(samps, function(x) {
+    tmp <- lambda[[paste0(x, ".cov")]]
+    mean.tmp <- mean(tmp)
+    tmp[tmp<5] <- NA
+    tmp2 <- mean(lambda[[paste0(x, ".C")]]/tmp, na.rm=TRUE)*100
+    paste0(round(tmp2, 2), "% (", round(mean.tmp, 1), ")")
+})
+
+## CpG bias
+tmp <- read.table("QC/CpG_bias.tsv", header=1, row.names=1)
+output[match(rownames(tmp),output$Sample), "Representation of CpGislands / shores"] <- paste0(round(tmp$CpGislands.bias, 1), "x / ", round(tmp$CpGshores.bias, 1), "x")
+write.table(output, "QC_report_table.csv", sep=",", row.names=FALSE)
+```
+
+<h1>
+Project `r project` report
+</h1>
+
+
+```{r summary_xtable, echo=FALSE, results='asis'}
+print(xtable(output, align=rep("c", ncol(output)+1)), type="html", include.rownames=FALSE)
+```
+
+<h3>
+  Depth vs Breadth of CpG sites
+</h3>
+
+<table id="meth_depth_vs_breadth" class="plots">
+ <thead>
+  <tr>
+    <th>
+      Whole genome sites
+    </th>
+    <th>
+      Only CpG sites 
+    </th>
+  </tr>
+ </thead>
+
+  <tr>
+    <td>
+      <img src="QC/whole.genome.coverage.svg" >
+    </td>
+    <td>
+      <img src="QC/CpG.coverage.svg" >
+    </td>
+  </tr>
+</table>
+
+
+
+<h3>
+  Overlapping of DNA methylation and SNP calling 
+</h3>
+
+
+```{r xtable, echo=FALSE, results='asis'}
+tb1 <- sapply(samples$Sample, function(x){
+  tb <- read.table(paste0(basedir,"called/",x,"/",x,".snp.filter.summary.txt"),sep="=");
+  paste0(gsub(" ","",tb[2,"V2"]),"(",gsub(" ","",tb[3,"V2"]),")")
+})
+tb1 <- as.data.frame(tb1)
+colnames(tb1) <- "CpG.overlap.SNP"
+
+tb2 <- sapply(samples$Sample, function(x){
+  tb <- read.table(paste0(basedir,"called/",x,"/",x,".BC.snp.vcf.gz.stats.tsv"));
+  s<-sum(tb$V2);tb$V2<-paste0("(",round(100*tb$V2/s,2),"%)");
+  c(s,do.call(paste,tb[1:5,]))
+})
+tb2 <- as.data.frame(t(tb2))
+colnames(tb2) <- c("Total.SNP", "Top.1", "Top.2", "Top.3", "Top.4", "Top.5")
+output <- data.frame(cbind(tb1,tb2))
+output$Sample <- rownames(output)
+cols <- c("Sample", "Total.SNP", "CpG.overlap.SNP", "Top.1", "Top.2", "Top.3", "Top.4", "Top.5")
+print(xtable(output[,cols], align=rep("c", ncol(output)+1)), type="html", include.rownames=FALSE)
+```
+
+<h3>
+  MethylSeekR Regions
+</h3>
+<h5>
+  Samples with < 3x coverage do not have MethylSeekR run upon them, so are displayed as NA
+</h5>
+<h4>
+  Individual samples
+</h4>
+
+```{r MethylSeekR_samples, echo=FALSE, results='asis'}
+if ("Pairs" %in% names(samples)) output <- samples[,1:3] else output <- samples[,1:2]
+
+fileprefix <- "bw/MethylSeekR/"
+filetypes <- c("UMRs"=".UMR.bed",
+               "LMRs"=".LMR.bed",
+               "PMDs"=".PMD.bed",
+  "PMD filtered UMRs"=".PMD.UMR.bed",
+  "PMD filtered LMRs"=".PMD.LMR.bed")
+
+# path <- paste0(fileprefix, samps[1], ".PMD.LMR.bed")
+# stopifnot(file.exists(path))
+
+for (x in names(filetypes)) {
+    output[[paste0("No ", x)]] <- sapply(samps, function(y) {
+        f <- paste0(fileprefix, y, filetypes[x])
+        if (file.exists(f))
+            prettyNum(length(import(f)), big.mark=",") else "NA"
+    })
+    output[[paste0("Size ", x)]] <- sapply(samps, function(y) {
+        f <- paste0(fileprefix, y, filetypes[x])
+        if (file.exists(f))
+            paste0(round(sum(as.numeric(width(import(f))))/1e6, 2), "Mb") else "NA"
+    })
+}
+
+print(xtable(output, align=rep("c", ncol(output)+1)), type="html", include.rownames=FALSE)
+```
+
+
+<h3>
+  Distribution of methylation
+</h3>
+
+<table id="meth_dist" class="plots">
+ <thead>
+  <tr>
+    <th>
+      Single CpGs
+    </th>
+    <th>
+      100bp Smoothed
+    </th>
+    <th>
+      1kb Smoothed
+    </th>
+    <th>
+      10kb Smoothed
+    </th>
+    <th>
+      100kb Smoothed
+    </th>
+  </tr>
+ </thead>
+
+  <tr>
+    <td>
+      <img src="QC/distributions/Single_CpGs.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/distributions/100bp.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/distributions/1kb.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/distributions/10kb.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/distributions/100kb.svg" class="zoomable">
+    </td>
+  </tr>
+</table>
+
+<table id="meth_dist_CpG" class="plots">
+ <thead>
+  <tr>
+    <th>
+      &nbsp
+    </th>
+    <th>
+      CpG Islands
+    </th>
+    <th>
+      CpG Shores
+    </th>
+    <th>
+      Non-island CpGs
+    </th>
+    <th>
+      &nbsp
+    </th>
+  </tr>
+ <thead>
+   
+  <tr>
+    <td>
+      &nbsp
+    </td>
+    <td>
+      <img src="QC/distributions/CpGislands.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/distributions/CpGshores.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/distributions/others.svg" class="zoomable">
+    </td>
+    <td>
+      &nbsp
+    </td>
+  </tr>
+</table>
+
+
+
+<h3>
+MDS clustering of samples
+</h3>
+
+<table id="MDS" class="plots">
+  <tr>
+    <th>
+      &#37; of sites
+    </th>
+    <th>
+      Single CpGs
+    </th>
+    <th>
+      100bp Smoothed
+    </th>
+    <th>
+      1kb Smoothed
+    </th>
+    <th>
+      10kb Smoothed
+    </th>
+    <th>
+      100kb Smoothed
+    </th>
+  </tr>
+
+  <tr>
+    <td>
+      Top 1&#37;
+    </td>
+    <td>
+      <img src="QC/MDS/Single_CpGs.01.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/100bp.01.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/1kb.01.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/10kb.01.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/100kb.01.svg" class="zoomable">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      Top 10&#37;
+    </td>
+    <td>
+      <img src="QC/MDS/Single_CpGs.02.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/100bp.02.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/1kb.02.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/10kb.02.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/100kb.02.svg" class="zoomable">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      Top 100&#37;
+    </td>
+    <td>
+      <img src="QC/MDS/Single_CpGs.03.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/100bp.03.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/1kb.03.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/10kb.03.svg" class="zoomable">
+    </td>
+    <td>
+      <img src="QC/MDS/100kb.03.svg" class="zoomable">
+    </td>
+  </tr>
+</table>
+
+
+```{r Meth_Diffs, echo=FALSE, results='asis'}
+plot_scales <- c("Single CpGs"="Single_CpGs",
+              "100bp Smoothed"="100bp",
+                "1kb Smoothed"="1kb",
+               "10kb Smoothed"="10kb",
+              "100kb Smoothed"="100kb")
+
+diffs <- dir(pattern="^DMRs_.*\\.diff$")
+if (length(diffs)>0) {
+    cat("<h3>Methylation Differences</h3>\n")
+    # parse diff files
+    # DMRs_group1-group2_program.diff
+    diffs <- data.frame("file"=diffs,
+                    "stripped"=gsub("^DMRs_", "", gsub("\\.diff$", "", diffs)),
+              stringsAsFactors=FALSE)
+    diffs$program <- gsub(".*_", "", diffs$stripped)
+    diffs$group1 <- gsub("-.*", "", diffs$stripped)
+    diffs$group2 <- gsub(paste(paste0("_", unique(diffs$program), "$"), collapse="|"), "",
+        gsub(".*-", "", diffs$stripped))
+    diffs.split <- split(diffs, paste0(diffs$group1, "-", diffs$group2))
+    for (x in names(diffs.split)) {
+        cat(paste0("<h4>", x, "</h4>\n"))
+
+        # Put in smooth scatters
+        if ("bw" %in% diffs.split[[x]]$program) {
+            cat("<h5>Smoothed scatter plots of methylation</h5>\n")
+            
+            # Table/header for smoothScatters
+            cat('<table id="MDS" class="plots">\n<tr>\n')
+            for (i in names(plot_scales)) cat(paste0("  <th>", i, "</th>\n"))
+            cat("</tr>\n")
+
+            # Row of smoothScatters
+            cat("<tr>\n")
+            for (i in plot_scales) {
+                if (i=="Single_CpGs")
+                    plotfile <- paste0("bw/", x, "/scatter/", x, ".png") else
+                    plotfile <- paste0("bw/", x, "/smoothed/scatter/", x, ".", i, ".png")
+                cat(paste0('  <td><img src="', plotfile, '" class="zoomable"></td>\n'))
+            }
+            cat("</tr>\n")
+
+            # End table
+            cat("</table>\n")
+        }
+    }
+}
+```
+
