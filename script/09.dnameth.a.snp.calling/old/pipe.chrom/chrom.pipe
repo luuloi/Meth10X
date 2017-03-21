@@ -1,7 +1,0 @@
-
-
-bisSNP_chrom = {
-	println input
-}
-
-chr(1..22,'X','Y') * [ bisSNP_chrom ]
