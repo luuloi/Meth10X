@@ -3,8 +3,9 @@
 * WGBSX10 is a pipeline of parallel alignment whole genome bisulfite sequencing (WGBS) or nucleosome occupancy and DNA methylation (NOMEseq) from fastq files of multi samples (approx. 8-16 samples with more than 20X coverage for each) and generating:
   * A tsv big table of CG/CHH/CHG with filter/not filter SNP
   * SNP calling
-  * bigwig files of whole genome coverage, only CpG coverage, CpG methylation of each sample
-  * An HTML report of quality control metrics 
+  * PMD, LMR, UMR, HMR calling 
+  * bigwig files of whole genome coverage, only CpG coverage, CpG methylation of each sample for IGV visualization
+  * An HTML report of quality control detail metrics 
 of these samples
 
 * WGBSX10 helps to fasten the whole workflow of WGBS as well as enhance the accurate of methylation and SNP calling.
