@@ -11,6 +11,9 @@ of these samples
 
 * WGBSX10 is built based on in-house bash/python/R script, Bpipe and a collection of software packages:
   * [bwa-meth]     https://github.com/brentp/bwa-meth
+  * [samtools]     https://github.com/samtools/
+  * [qualimap]     http://qualimap.bioinfo.cipf.es/
+  * [SAMStat]      http://samstat.sourceforge.net/
   * [picardtools]  https://github.com/broadinstitute/picard
   * [bedtools]     https://github.com/arq5x/bedtools2
   * [MethylDackel] https://github.com/dpryan79/MethylDackel
