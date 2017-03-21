@@ -22,5 +22,5 @@ of these samples
   * [Vcf-tools]    https://github.com/vcftools
   * [trimCEGX]
   * [makeFullDataFrame]
-  * [UCSC-format-file-converter]
+  * [UCSC-format-file-converter]  http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/
   * [ggplot2]
