@@ -7,8 +7,8 @@
   * An HTML report of quality control metrics 
 of these samples
 
-* WGBSX10 is built based on Bpipe and a collection of software packages:
-  * bwa-meth
+* WGBSX10 is built based on bash/python/R script, Bpipe and a collection of software packages:
+  * [bwa-meth] (http://effectif.com/nesta)
   * bedtools
   * MethylDackel
   * Biscuit
