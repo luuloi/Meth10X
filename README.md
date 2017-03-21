@@ -7,6 +7,8 @@
   * An HTML report of quality control metrics 
 of these samples
 
+* WGBSX10 helps to fasten the whole workflow of WGBS as well as enhance the accurate of methylation and SNP calling.
+
 * WGBSX10 is built based on bash/python/R script, Bpipe and a collection of software packages:
   * [bwa-meth]     https://github.com/brentp/bwa-meth
   * [bedtools]     https://github.com/arq5x/bedtools2
