@@ -1,0 +1,59 @@
+/////////////////////////////////////////////////////////////////////////////////
+//
+// WGBS10X: main.WGBS10X
+//
+/////////////////////////////////////////////////////////////////////////////////
+
+about title: "WGBS10X: Alignment and DNA methylation/SNP calling "
+
+// Load the default configuration: path to packages, modules, genome index, CpG coordinates...
+load SYSTEM_CONFIG
+
+// All the core pipeline stages in the pipeline
+load 'stage.WGBS10X.bpipe'
+
+// export PATH=/home/darloluu/bin/bpipe-0.9.9.2/bin:$PATH
+
+run { "%_R*.fastq.gz" * [ trim_fastq + alignment_and_mark_duplication + check_marked_dup_and_rm_unmarked_lane_bam + 
+                            [ flagstat_lane , assessing_bias_lane ] + move_lane_bam 
+                        ] +
+                          
+      "%.move" *		[ merge_lane_bam + check_sample_bam + 
+                         	[ clip_bam , extracted_chrom_sizes_from_sample_bam ] +
+                         	[ flagstat , assessing_bias , count_mapq_score , create_bigwig , qualimap ] +
+                         	
+                          [ methyldackel_extract_merge_context , methyldackel_extract_strand , biscuit_pileup ] +
+                          [ methyldackel_CpG_merge_make_full_frame + methyldackel_CpG_strand_only_lambda ,
+                            methyldackel_CpG_strand_make_full_frame , 
+                            methyldackel_CHH , 
+                            methyldackel_CHG , 
+                            biscuit_vcf2bed_CpG , 
+                            biscuit_vcf2bed_SNP + biscuit_convert_SNP_bed_to_vcf + biscuit_SNP_vcf_stats
+                          ] +
+                         	[ methyldackel_compute_meth_average , filter_snp , MethylSeekR ] + 
+                            meth_calling_clean + 
+                         	[ [ make_bigwig_CpG_coverage , make_bigwig_CpG_meth_ratio ] + make_bigwig_CpG_meth_ratio_smooth + make_bigwig_CpG_clear , 
+                            compute_meth_ratio + [ compute_distribution_CpG_coverage_per_chrom , CpG_meth_distribution ] + 
+                                                   CpGisland_coverage_bias + distribution_and_bias_clean , 
+                            compute_CpG_coverage_per_sample 
+                          ] +
+                         	[ make_merge_bigTable_file , plot_coverage_per_chromosome_and_sample ]
+                  	] +
+
+        [ bigTable_tsv_gz , 
+          bigTable_strand_tsv_gz , 
+          bigTable_lambda_strand_tsv_gz , 
+          bigTable_CHG_strand_tsv_gz , 
+          bigTable_CHH_strand_tsv_gz 
+        ] +
+        [ mds_plot_single_CpG , 
+          mds_plot_smooth_CpG , 
+          DNA_meth_distribution_plot_each_CpG , 
+          Whole_genome_coverage_plot_only_CpG , 
+          Whole_genome_coverage_plot , 
+          merge_CpG_bias 
+        ] + 
+          make_html_report
+}
+
+// bigTable_snp_vcf_gz ,
