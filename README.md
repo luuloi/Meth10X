@@ -22,10 +22,11 @@ of these samples
   * [MethylSeekR]  https://github.com/Bioconductor-mirror/MethylSeekR
   * [Vcf-tools]    https://github.com/vcftools
   * [fastqc]       http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
-  * [trimCEGX]
-  * [makeFullDataFrame]
+  * [trimCEGX]     https://github.com/luuloi/trim.paired.read
+  * [makeFullDataFrame] https://github.com/luuloi/make.full.data.frame
+  * [merge_columns_multi_tsv] https://github.com/luuloi/merge_columns_multi_tsv
   * [UCSC-format-file-converter]  http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/
-  * [ggplot2]
+  * [ggplot2]      https://github.com/tidyverse/ggplot2
 
 * Dependencies: [TODO]
   * Java version >= 1.8
