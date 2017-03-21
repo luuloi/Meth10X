@@ -1,8 +1,3 @@
-# module load phuluu/python/2.7.8
-# module load gi/java/jdk1.8.0_25
-# module load phuluu/bpipe/0.9.9.2
-# python /home/phuluu/Projects/WGBS10X_new/V03/pipe/run_Bpipe.py /home/phuluu/Projects/WGBS10X_new/V03/config/sample2.config /home/phuluu/Projects/WGBS10X_new/V03/config/system.config
-# python /home/phuluu/Projects/WGBS10X_new/V03/pipe/run_Bpipe.py /home/phuluu/Projects/WGBS10X_new/V03/config/CEGX.config /home/phuluu/Projects/WGBS10X_new/V03/config/system.config
 from configobj import ConfigObj
 import sys, os, re, argparse, subprocess
 
@@ -149,14 +144,4 @@ cmd = "cd " + projectp + ";" + "bpipe" + " run " + "-p SYSTEM_CONFIG=" + system_
 # run_cmd(cmd, "*** Download, check, trim and align the fastq files to " + system_config["GENOME"] + " ***", printoutput=False)
 print cmd + "\n"
 os.system(cmd)
-
-
-# cd /home/phuluu/data/WGBS10X_new/Test_Prostate;/home/phuluu/bin/bpipe-0.9.9.2/bin/bpipe run -p \
-# SYSTEM_CONFIG=/home/phuluu/Projects/WGBS10X_new/V02/config/system.config.txt \
-# /home/phuluu/Projects/WGBS10X_new/V02//pipe/download.fastq.bpipe  \
-# raw/*/*/*_R*.fastq.sh
-# cd /home/phuluu/data/WGBS10X_new/Test_Prostate;/home/phuluu/bin/bpipe-0.9.9.2/bin/bpipe run -p \
-# SYSTEM_CONFIG=/home/phuluu/Projects/WGBS10X_new/V02/config/system.config.txt \
-# /home/phuluu/Projects/WGBS10X_new/V02//pipe/main.WGBS10X.bpipe  \
-# raw/*/*/*_R*.fastq.gz
 
