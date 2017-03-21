@@ -1,11 +1,9 @@
 #!/bin/bash -e
 
 # load module 
-export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
+export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH
 source /etc/profile.d/modules.sh
-MethylDackel="/home/phuluu/methods/DNAmeth.calling.method.comparison/MethylDackel/bin/MethylDackel"
-# module load phuluu/python/2.7.8
+module load phuluu/MethylDackel/0.2.0
 
 # $1=aligned/PrEC/PrEC.bam
 INPUT=$1
@@ -22,7 +20,7 @@ echo " *** Assessing CpG Bias" > $LOGFILE
 echo `date`" - Started processing $INPUT on $HOSTNAME" >> $LOGFILE
 # echo python "$BWAMETH/bias-plot.py" $INPUT $GENOME >> $LOGFILE
 # python "$BWAMETH/bias-plot.py" $INPUT $GENOME 2>> $LOGFILE
-echo """ $MethylDackel mbias $GENOME $INPUT $OUTPUT/${sample}.MD.bias > $OUTPUT/${sample}.MD.bias.txt 2>&1 """ >> $LOGFILE
-$MethylDackel mbias $GENOME $INPUT $OUTPUT/${sample}.MD.bias > $OUTPUT/${sample}.MD.bias.txt 2>&1
+echo """ MethylDackel mbias $GENOME $INPUT $OUTPUT/${sample}.MD.bias > $OUTPUT/${sample}.MD.bias.txt 2>&1 """ >> $LOGFILE
+MethylDackel mbias $GENOME $INPUT $OUTPUT/${sample}.MD.bias > $OUTPUT/${sample}.MD.bias.txt 2>&1
 echo `date`" - Finished Assessing bias" >> $LOGFILE
 

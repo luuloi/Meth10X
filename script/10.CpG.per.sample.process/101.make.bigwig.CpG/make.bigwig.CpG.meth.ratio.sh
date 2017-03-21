@@ -3,11 +3,10 @@
 # usage: bash make.bigwig.CpG.sh input output GSIZE minCov
 
 # load module 
-export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
+export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH
 source /etc/profile.d/modules.sh
-module load gi/bedtools/2.22.0
-BEDGRAPH=/home/darloluu/bin/ucsc/bedGraphToBigWig
+# bedGraphToBigWig
+module load phuluu/UCSC/v4
 
 # INPUT="/home/darloluu/tmp/Test_Prostate/called/LNCaP/LNCaP.MD_CpG.tsv.gz"
 # chr	position	LNCaP.C		LNCaP.cov
@@ -38,9 +37,7 @@ zcat $INPUT| egrep \"chr[0-9XYM]\"| awk -v minCov=$minCov '{OFS=\"\t\"}NR>1{if(\
 """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 
-cmd="""
-$BEDGRAPH "$OUTPUT/${sample}.meth.ratio.bedGraph" $GSIZE "$OUTPUT/${sample}.bw"
-"""
+cmd=""" bedGraphToBigWig "$OUTPUT/${sample}.meth.ratio.bedGraph" $GSIZE "$OUTPUT/${sample}.bw" """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 
 echo `date`" - Finished processing $1" >> "$LOGFILE"

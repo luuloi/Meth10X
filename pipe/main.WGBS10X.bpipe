@@ -42,7 +42,7 @@ run { "%_R*.fastq.gz" * [ trim_fastq + alignment_and_mark_duplication + check_ma
 
         [ bigTable_tsv_gz , 
           bigTable_strand_tsv_gz , 
-          bigTable_lambda_strand_tsv_gz , 
+          bigTable_lambda_strand_tsv_gz ,
           bigTable_CHG_strand_tsv_gz , 
           bigTable_CHH_strand_tsv_gz 
         ] +
@@ -56,4 +56,4 @@ run { "%_R*.fastq.gz" * [ trim_fastq + alignment_and_mark_duplication + check_ma
           make_html_report
 }
 
-// bigTable_snp_vcf_gz ,
+// bigTable_snp_vcf_gz , 

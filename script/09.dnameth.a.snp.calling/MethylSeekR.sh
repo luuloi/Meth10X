@@ -5,11 +5,11 @@
 
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
 source /etc/profile.d/modules.sh
 module load phuluu/R/3.1.2
-module load gi/gcc/4.8.2
-module load gi/bedtools/2.22.0
+# bedToBigBed
+module load phuluu/UCSC/v4
+
 
 # get paramaters
 # $1=called/PrEC/PrEC.MD_CpG.tsv.gz

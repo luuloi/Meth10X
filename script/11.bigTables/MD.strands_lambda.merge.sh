@@ -1,6 +1,10 @@
 #!bin/bash -e
 # usage: bash methyldackel.sh input output reference
 
+# load module 
+export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
+source /etc/profile.d/modules.sh
+
 
 # get paramaters
 # $1=/home/phuluu/data/WGBS10X_new/Test_Prostate/bigTable/MD_CpG.merge

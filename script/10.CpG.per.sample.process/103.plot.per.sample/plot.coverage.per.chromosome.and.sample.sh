@@ -3,8 +3,7 @@
 # usage: bash qc.per.sample.sh input output
 
 # load module 
-export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
+export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH
 source /etc/profile.d/modules.sh
 module load phuluu/R/3.1.2
 

@@ -2,10 +2,10 @@
 # usage: bash methyldackel.sh input output reference
 
 # module
-module load phuluu/perl/5.24.1
 module load gi/tabix/0.2.6
+module load phuluu/perl/5.24.1
 export PERL5LIB=/share/ClusterShare/software/contrib/phuluu/vcftools/src/perl/:$PERL5LIB
-VCF_MERGE="/share/ClusterShare/software/contrib/phuluu/vcftools/bin/vcf-merge"
+module load phuluu/vcftools/0.1.15
 
 # get paramaters
 # $1=/home/phuluu/data/WGBS10X_new/Test_Prostate/bigTable/MD_CpG.merge
@@ -25,7 +25,7 @@ cmd="input_unique=\$(echo $input| awk '{for(i=1;i<=NF;i++){if(\$i ~ /BC.snp.vcf.
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished sort\n" >> $LOGFILE
 
 echo "Merge now ..." >> $LOGFILE
-cmd="$VCF_MERGE "
+cmd="vcf-merge "
 for i in `cat -s $input_unique`; do
 cmd="${cmd} $i"; 
 done

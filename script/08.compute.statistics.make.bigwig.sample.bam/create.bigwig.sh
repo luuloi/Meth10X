@@ -2,12 +2,13 @@
 
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
 source /etc/profile.d/modules.sh
 module load gi/samtools/1.2
 module load gi/bedtools/2.22.0
 module load phuluu/R/3.1.2
-BEDGRAPH="/home/phuluu/bin/ucsc/bedGraphToBigWig"
+# bedGraphToBigWig
+module load phuluu/UCSC/v4
+
 
 # $1=merged/PrEC/PrEC.bam
 INPUT=${1/.bam/}
@@ -24,8 +25,8 @@ echo `date`" - Finished coverage bedGraph" >> $LOGFILE
 
 LOGFILE="${OUTPUT}/${sample}.coverage.bw.log"
 echo `date`" *** Converted bedGraph to bigwig" > $LOGFILE
-echo """ $BEDGRAPH ${INPUT}.coverage.bedGraph ${INPUT}.chrom.sizes ${INPUT}.coverage.bw """ >> $LOGFILE
-$BEDGRAPH "${INPUT}.coverage.bedGraph" "${INPUT}.chrom.sizes" "${INPUT}.coverage.bw" 2>> $LOGFILE
+echo """ bedGraphToBigWig ${INPUT}.coverage.bedGraph ${INPUT}.chrom.sizes ${INPUT}.coverage.bw """ >> $LOGFILE
+bedGraphToBigWig "${INPUT}.coverage.bedGraph" "${INPUT}.chrom.sizes" "${INPUT}.coverage.bw" 2>> $LOGFILE
 echo `date`" - Finished convert bedGraph to bigwig" >> $LOGFILE
 
 
@@ -58,3 +59,4 @@ rm "${INPUT}.coverage.bedGraph" 2>> $LOGFILE
 echo `date`" - Finished calculate depth" >> $LOGFILE
 
 # Note: bw and depth files are generated from clipped and deduplicated bam with mapq score >=40
+

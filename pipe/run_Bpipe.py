@@ -1,14 +1,13 @@
 # module load phuluu/python/2.7.8
 # module load gi/java/jdk1.8.0_25
+# module load phuluu/bpipe/0.9.9.2
 # python /home/phuluu/Projects/WGBS10X_new/V03/pipe/run_Bpipe.py /home/phuluu/Projects/WGBS10X_new/V03/config/sample2.config /home/phuluu/Projects/WGBS10X_new/V03/config/system.config
 # python /home/phuluu/Projects/WGBS10X_new/V03/pipe/run_Bpipe.py /home/phuluu/Projects/WGBS10X_new/V03/config/CEGX.config /home/phuluu/Projects/WGBS10X_new/V03/config/system.config
 from configobj import ConfigObj
 import sys, os, re, argparse, subprocess
 
-# Bpipe
-Bpipe = "/home/phuluu/bin/bpipe-0.9.9.2/bin/bpipe"
-BASEDIR_full = os.path.dirname(os.path.realpath(__file__)).replace("/pipe", "")
-BASEDIR = BASEDIR_full.replace("/real.pipe", "")
+BASEDIR_full = os.path.dirname(os.path.realpath(__file__))
+BASEDIR = BASEDIR_full.replace("/pipe", "")
 error = ["ERROR", "do not exist", "No such file or directory", "Exception", "corrupted"]
 rtrymax = 2
 
@@ -140,13 +139,13 @@ def run_cmd(cmd, title, printoutput=True):
 print "======================================================= WGBS10X Pipeline ===================================================\n"
 projectp = system_config["OUTPUT"] + "/" + project 
 
-cmd = "cd " + projectp + ";" + Bpipe + " run " + "-p SYSTEM_CONFIG=" + system_config_new_path + " " + BASEDIR_full + "/download.fastq.bpipe "  + " raw/*/*/*_R*.fastq.sh"
+cmd = "cd " + projectp + ";" + "bpipe" + " run " + "-p SYSTEM_CONFIG=" + system_config_new_path + " " + BASEDIR_full + "/download.fastq.bpipe "  + " raw/*/*/*_R*.fastq.sh"
 # run_cmd(cmd, "*** Download, check, trim and align the fastq files to " + system_config["GENOME"] + " ***", printoutput=False)
 print cmd + "\n"
 # os.system(cmd)
 # os.system("sleep 30")
 
-cmd = "cd " + projectp + ";" + Bpipe + " run " + "-p SYSTEM_CONFIG=" + system_config_new_path + " " + BASEDIR_full + "/main.WGBS10X.bpipe "  + " raw/*/*/*_R*.fastq.gz"
+cmd = "cd " + projectp + ";" + "bpipe" + " run " + "-p SYSTEM_CONFIG=" + system_config_new_path + " " + BASEDIR_full + "/main.WGBS10X.bpipe "  + " raw/*/*/*_R*.fastq.gz"
 # run_cmd(cmd, "*** Download, check, trim and align the fastq files to " + system_config["GENOME"] + " ***", printoutput=False)
 print cmd + "\n"
 os.system(cmd)

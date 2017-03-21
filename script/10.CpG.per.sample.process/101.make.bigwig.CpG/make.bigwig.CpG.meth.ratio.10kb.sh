@@ -7,7 +7,8 @@ export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterS
 export PATH=/home/phuluu/bin:$PATH
 source /etc/profile.d/modules.sh
 module load gi/bedtools/2.22.0
-BEDGRAPH=/home/darloluu/bin/ucsc/bedGraphToBigWig
+# bedGraphToBigWig
+module load phuluu/UCSC/v4
 
 # INPUT="/home/darloluu/tmp/Test_Prostate/bigTables/bw/LNCaP.bw"
 INPUT=$1
@@ -34,9 +35,7 @@ bedtools groupby -g 1,2,3 -c 4 -o collapse|
 awk '{OFS=\"\t\"}{s=0; c=0; split(\$4,a,\",\"); for(i=1;i<=length(a);i++){if(a[i]>=0){s=s+a[i];c=c+1}}; if(c>0){print \$1,\$2,\$3,s/c}else{print \$1,\$2,\$3,-1}}' > "$OUTPUT/${sample}.smoothed.10kb.bedGraph"
 """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
-cmd="""
-$BEDGRAPH "$OUTPUT/${sample}.smoothed.10kb.bedGraph" $GSIZE "$OUTPUT/${sample}.10kb.bw"
-"""
+cmd=""" bedGraphToBigWig "$OUTPUT/${sample}.smoothed.10kb.bedGraph" $GSIZE "$OUTPUT/${sample}.10kb.bw" """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 
 # clean

@@ -2,9 +2,7 @@
 
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
 source /etc/profile.d/modules.sh
-
 # load module
 module load phuluu/python/2.7.8
 module load aarsta/bwa/0.7.9a

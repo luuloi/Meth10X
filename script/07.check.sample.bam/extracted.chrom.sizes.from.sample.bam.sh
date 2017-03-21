@@ -2,7 +2,6 @@
 
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
 source /etc/profile.d/modules.sh
 module load gi/samtools/1.2
 
@@ -18,3 +17,6 @@ echo `date`" - Started processing $INPUT on $HOSTNAME" >> $LOGFILE
 echo """ samtools view -H $INPUTS | grep ^@SQ | tr "\t" ":" | awk -F: '{print $3"\t"$5}' > ${OUTPUT}/${sample}.chrom.sizes """ >> $LOGFILE
 samtools view -H $INPUT | grep ^@SQ | tr "\t" ":" | awk -F: '{print $3"\t"$5}' > "${OUTPUT}/${sample}.chrom.sizes" 2>> $LOGFILE
 echo `date`" - Finished Extracted chrom sizes from bam" >> $LOGFILE
+
+
+

@@ -25,7 +25,7 @@ library(MethylSeekR)
 
 # load
 # convert beds to bigBeds
-bedToBigBed <- "/home/phuluu/bin/ucsc/bedToBigBed"
+# bedToBigBed <- "/home/phuluu/bin/ucsc/bedToBigBed"
 # /home/phuluu/Projects/WGBS10X_new/V02/annotations/hg19/hg19.CpG5kb.bed
 # annotation.prefix <- "/home/phuluu/Projects/WGBS10X_new/V02/annotations/"
 annotation.prefix <- commandArgs(TRUE)[2]
@@ -53,7 +53,7 @@ setwd(output.dir)
 sample <- commandArgs(TRUE)[5]
 sample.C <- paste0(sample, ".C")
 sample.cov <- paste0(sample, ".cov")
-minMeanCov <- 3
+minMeanCov <- 0.01
 num.cores <- 4
 if (mean(values(CpGs)[[sample.cov]])>=minMeanCov) {
     message("Running MethylSeekR on ", sample)
@@ -97,7 +97,8 @@ if (mean(values(CpGs)[[sample.cov]])>=minMeanCov) {
     for (j in names(tmp)) {
         bed.file.name <- paste(sample, j, "bed", sep=".")
         export(tmp[[j]], bed.file.name, format="bed")
-        system(paste0("cut -f1,2,3 ", bed.file.name, " > tmp; ", bedToBigBed, " tmp ", sample, ".chrom.sizes ", gsub(".bed$", ".bb", bed.file.name), "; rm tmp"))
+        # system(paste0("cut -f1,2,3 ", bed.file.name, " > tmp; ", bedToBigBed, " tmp ", sample, ".chrom.sizes ", gsub(".bed$", ".bb", bed.file.name), "; rm tmp"))
+	system(paste0("cut -f1,2,3 ", bed.file.name, " > tmp; bedToBigBed tmp ", sample, ".chrom.sizes ", gsub(".bed$", ".bb", bed.file.name), "; rm tmp"))
     }
 }else{
     # '.PMD.bed', '.UMR.bed', '.LMR.bed', '.PMD.LMR.bed', '.PMD.UMR.bed', '.PMD.stats'

@@ -3,7 +3,6 @@
 # bash "/home/phuluu/Projects/WGBS10X_new/V02//script/07.check.sample.bam/clip.bam.sh" "merged/LNCaP/LNCaP.bam" "/home/phuluu/data/WGBS10X_new/Test_Prostate/merged/LNCaP"
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
 source /etc/profile.d/modules.sh
 module load marcow/bamUtil/gcc-4.4.6/1.0.7
 

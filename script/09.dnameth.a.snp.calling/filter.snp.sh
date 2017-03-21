@@ -4,8 +4,7 @@
 # bash ~/Projects/WGBS10X_new/V02/script/09.dnameth.a.snp.calling/MethylSeekR.sh aligned/PrEC/PrEC.bam called/PrEC /home/phuluu/Projects/WGBS10X_new/V02/annotations/hg19/hg19.fa
 
 # load module 
-export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
+export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH
 source /etc/profile.d/modules.sh
 module load gi/bedtools/2.22.0
 
@@ -67,3 +66,5 @@ gzip ${input_MD}.filter.out.snp.tsv;
 echo $cmd >> $LOGFILE; eval $cmd 2>> $LOGFILE
 
 echo -e `date`" Finished - Filter out SNPs" >> $LOGFILE
+
+

@@ -2,11 +2,9 @@
 # usage: bash methyldackel.sh input output reference
 
 # load module 
-export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
+export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH
 source /etc/profile.d/modules.sh
-MethylDackel="/home/phuluu/methods/DNAmeth.calling.method.comparison/MethylDackel/bin/MethylDackel"
-
+module load phuluu/MethylDackel/0.2.0
 
 # get paramaters
 # $1=aligned/PrEC/PrEC.bam
@@ -36,7 +34,7 @@ trim=$(cut -d: -f2 ${input/.bam/.MD.bias.txt})
 ### mergecontext CG only
 echo `date`" *** DNA methylation calling merge context with MethylDackel" > $LOGFILE
 echo -e """
-$MethylDackel extract $trim \n
+MethylDackel extract $trim \n
                       -q 60 \n
                       -p 20 \n
                       -d 1 \n
@@ -47,7 +45,7 @@ $MethylDackel extract $trim \n
 """ >> $LOGFILE
 # MethylDackel extract reference_genome.fa alignments.bam
 # trim: --nOT 1,1,1,1 --nOB 1,1,1,1 --nCTOT 1,1,1,1 --nCTOB 1,1,1,1
-$MethylDackel extract $trim \
+MethylDackel extract $trim \
                       -q 60 \
                       -p 20 \
                       -d 1 \
@@ -66,3 +64,4 @@ echo `date`" Finished DNA methylation calling merge context with MethylDackel" >
 # chr position LNCaP.C   LNCaP.cov
 # chr1  10469    0       0
 # chr1  10471    0       0
+

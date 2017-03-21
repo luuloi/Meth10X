@@ -2,11 +2,10 @@
 # usage: bash biscuit.sh input output reference
 
 # load module
-export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
-export PATH=/home/phuluu/bin:$PATH
+export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH
 source /etc/profile.d/modules.sh
 module load gi/tabix/0.2.6
-biscuit="/home/phuluu/methods/DNAmeth.calling.method.comparison/biscuit/biscuit"
+module load phuluu/biscuit/0.2.0
 
 
 # get paramaters
@@ -23,8 +22,8 @@ echo `date`" *** Biscuit pileup: SNP calling" > $LOGFILE
 
 # 5 hours
 echo "- Pileup" >> $LOGFILE
-echo """ $biscuit pileup -m 60 -b 20 -k 5 -t 100000 -r $ref -i $input -o "${output}/${sample}.BC.vcf" -q 16 -P 0.001 -Q 0.900 """ >> $LOGFILE
-$biscuit pileup -m 60 -b 20 -k 1 -t 100000 -r $ref -i $input -o "${output}/${sample}.BC.vcf" -q 16 -P 0.001 -Q 0.900 2>> $LOGFILE
+echo """ biscuit pileup -m 60 -b 20 -k 5 -t 100000 -r $ref -i $input -o "${output}/${sample}.BC.vcf" -q 16 -P 0.001 -Q 0.900 """ >> $LOGFILE
+biscuit pileup -m 60 -b 20 -k 1 -t 100000 -r $ref -i $input -o "${output}/${sample}.BC.vcf" -q 16 -P 0.001 -Q 0.900 2>> $LOGFILE
 echo `date`" - Finished Biscuit pileup" >> $LOGFILE
 
 # bgzip vcf file
