@@ -19,6 +19,7 @@ of these samples
   * [MethylDackel] https://github.com/dpryan79/MethylDackel
   * [Biscuit]      https://github.com/zwdzwd/biscuit
   * [MethylSeekR]  https://github.com/Bioconductor-mirror/MethylSeekR
+  * [Vcf-tools]    https://github.com/vcftools
   * [trimCEGX]
   * [makeFullDataFrame]
   * [UCSC-format-file-converter]
