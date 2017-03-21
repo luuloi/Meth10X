@@ -24,3 +24,16 @@ of these samples
   * [makeFullDataFrame]
   * [UCSC-format-file-converter]  http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/
   * [ggplot2]
+
+* Dependencies: [TODO]
+
+* Installation: [TODO]
+
+* Fist Run: [TODO]
+
+* Second Run: [TODO]
+
+* Inputs require: fastq files in .gz format
+* Outputs [TODO]
+  * Big table of 2 samples
+  * HTML report
