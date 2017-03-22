@@ -42,7 +42,7 @@ of these samples
   * Filled sample config file, example https://github.com/luuloi/WGBSX10/blob/master/config/sample.Test_ProstateC.config
   * Filled system config file, example https://github.com/luuloi/WGBSX10/blob/master/config/system.Test_ProstateC.config
   * Note: 
-       * The fastq files are located in Test_ProstateC/raw/LNCaP/lane1/lane1_R1.fastq.gz,                                          Test_ProstateC/raw/sample/lane2/lane1_R2.fastq.gz of each sample.
+       * The fastq files are located in project/raw/LNCaP/lane1/lane1_R1.fastq.gz,                                          project/raw/sample/lane2/lane1_R2.fastq.gz of each sample.
        * Lane and sample name should not have any dots '.' in it.
                                        
 * Fist Run: [TODO]
