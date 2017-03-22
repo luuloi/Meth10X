@@ -78,7 +78,7 @@ of these samples
     * Distribution of methylation ![optional caption text](example/figures/distribution.png)
     * MDS clustering of samples ![optional caption text](example/figures/mds.png)
   * Big table contain the count of C and coverage of all CpG sites in the reference genome
-    #chr | position | LNCaP.C | LNCaP.cov | PrEC_1.C | PrEC_1.cov | PrEC.C | PrEC.cov
-    -----|----------|---------|-----------|----------|------------|--------|----------
-    chr1 | 10469    | 5       | 11        |  2       |  12        |   3    | 14  
+    * #chr | position | LNCaP.C | LNCaP.cov | PrEC_1.C | PrEC_1.cov | PrEC.C | PrEC.cov
+      -----|----------|---------|-----------|----------|------------|--------|----------
+      chr1 | 10469    | 5       | 11        |  2       |  12        |   3    | 14  
 
