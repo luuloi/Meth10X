@@ -77,10 +77,15 @@ of these samples
     * PMD, UMR, LMR and HMR calling ![optional caption text](example/figures/methylSeekR.png)
     * Distribution of methylation ![optional caption text](example/figures/distribution.png)
     * MDS clustering of samples ![optional caption text](example/figures/mds.png)
-  * Big table contain the count of C and coverage of all CpG sites in the reference genome
+  * CpG big table contain the count of C and coverage of all CpG sites in the reference genome similar to CHG and CHH big table
     * #chr | position | LNCaP.C | LNCaP.cov | PrEC_1.C | PrEC_1.cov | PrEC.C | PrEC.cov
       -----|----------|---------|-----------|----------|------------|--------|----------
       chr1 | 10469    | 10       | 11        |  2       |  12        |   3    | 14  
       chr1 | 10471    | 15       | 15        |  1       |  14        |   2    | 12
       ...  | ...    | ...       | ...        |  ...       |  ...        |   ...    | ...
-      
+  * CpG big table [filtered out CpG overlapping with SNP] contain the count of C and coverage of all CpG sites in the reference genome [LNCaP having SNP at postion chr1:10471 therefore this CpG methylation value is ommitted ]
+    * #chr | position | LNCaP.C | LNCaP.cov | PrEC_1.C | PrEC_1.cov | PrEC.C | PrEC.cov
+      -----|----------|---------|-----------|----------|------------|--------|----------
+      chr1 | 10469    | 10       | 11        |  2       |  12        |   3    | 14  
+      chr1 | 10471    | 0       | 0        |  1       |  14        |   2    | 12
+      ...  | ...    | ...       | ...        |  ...       |  ...        |   ...    | ...
