@@ -19,6 +19,7 @@ of these samples
   * [SAMStat]      http://samstat.sourceforge.net/
   * [picardtools]  https://github.com/broadinstitute/picard
   * [bedtools]     https://github.com/arq5x/bedtools2
+  * [Bpipe]        https://github.com/ssadedin/bpipe
   * [bamUtil]      https://github.com/statgen/bamUtil
   * [MethylDackel] https://github.com/dpryan79/MethylDackel
   * [Biscuit]      https://github.com/zwdzwd/biscuit
