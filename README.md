@@ -85,15 +85,69 @@ of these samples
     * PMD, UMR, LMR and HMR calling ![optional caption text](example/figures/methylSeekR.png)
     * Distribution of methylation ![optional caption text](example/figures/distribution.png)
     * MDS clustering of samples ![optional caption text](example/figures/mds.png)
+  
   * CpG big table contain the count of C and coverage of all CpG sites in the reference genome similar to CHG and CHH big table
     * #chr | position | LNCaP.C | LNCaP.cov | PrEC_1.C | PrEC_1.cov | PrEC.C | PrEC.cov
       -----|----------|---------|-----------|----------|------------|--------|----------
       chr1 | 10469    | 10       | 11        |  2       |  12        |   3    | 14  
       chr1 | 10471    | 15       | 15        |  1       |  14        |   2    | 12
       ...  | ...    | ...       | ...        |  ...       |  ...        |   ...    | ...
+  
   * CpG big table [filtered out CpG overlapping with SNP] contain the count of C and coverage of all CpG sites in the reference genome [LNCaP having SNP at postion chr1:10471 therefore this CpG methylation value is ommitted ]
     * #chr | position | LNCaP.C | LNCaP.cov | PrEC_1.C | PrEC_1.cov | PrEC.C | PrEC.cov
       -----|----------|---------|-----------|----------|------------|--------|----------
       chr1 | 10469    | 10       | 11        |  2       |  12        |   3    | 14  
       chr1 | 10471    | 0       | 0        |  1       |  14        |   2    | 12
       ...  | ...    | ...       | ...        |  ...       |  ...        |   ...    | ...
+
+  * Output folder structure
+    * .
+├── aligned
+│   ├── LNCaP
+│   ├── PrEC
+│   └── PrEC_1
+├── bigTable
+│   ├── bigTable.CHG.strand.tsv.gz
+│   ├── bigTable.CHH.strand.tsv.gz
+│   ├── bigTable.filtered.snp.tsv.gz
+│   ├── bigTable.lambda.strand.tsv.gz
+│   ├── bigTable.strand.tsv.gz
+│   ├── bigTable.tsv
+│   ├── bigTable.tsv.gz
+│   ├── bw
+│   ├── project.csv
+│   ├── QC
+│   ├── QC_Report.css
+│   ├── QC_Report.html
+│   ├── QC_Report.md
+│   ├── QC_Report.Rmd
+│   └── QC_report_table.csv
+├── called
+│   ├── LNCaP
+│   ├── PrEC
+│   └── PrEC_1
+├── config
+│   ├── bpipe.config
+│   ├── sample.Test_ProstateC.config
+│   └── system.Test_ProstateC.config
+├── merged
+│   ├── LNCaP
+│   ├── PrEC
+│   └── PrEC_1
+├── raw_trimmed
+│   ├── LNCaP
+│   ├── PrEC
+│   └── PrEC_1
+├── raw
+    ├── LNCaP
+    │   └── TKCC20140123_LNCaP_P73_Test
+    │       ├── TKCC20140123_LNCaP_P73_Test_R1.fastq.gz
+    │       ├── TKCC20140123_LNCaP_P73_Test_R2.fastq.gz
+    ├── PrEC
+    │   └── TKCC20140123_PrEC_P6_Test
+    │       ├── TKCC20140123_PrEC_P6_Test_R1.fastq.gz
+    │       ├── TKCC20140123_PrEC_P6_Test_R2.fastq.gz
+    └── PrEC_1
+        └── TKCC20140214_PrEC_P6_Test
+            ├── TKCC20140214_PrEC_P6_Test_R1.fastq.gz
+            |── TKCC20140214_PrEC_P6_Test_R2.fastq.gz
