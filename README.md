@@ -80,5 +80,7 @@ of these samples
   * Big table contain the count of C and coverage of all CpG sites in the reference genome
     * #chr | position | LNCaP.C | LNCaP.cov | PrEC_1.C | PrEC_1.cov | PrEC.C | PrEC.cov
       -----|----------|---------|-----------|----------|------------|--------|----------
-      chr1 | 10469    | 5       | 11        |  2       |  12        |   3    | 14  
-
+      chr1 | 10469    | 10       | 11        |  2       |  12        |   3    | 14  
+      chr1 | 10471    | 15       | 15        |  1       |  14        |   2    | 12
+      ...  | ...    | ...       | ...        |  ...       |  ...        |   ...    | ...
+      
