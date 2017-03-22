@@ -61,7 +61,7 @@ of these samples
        * The fastq files are located in project/raw/LNCaP/lane1/lane1_R1.fastq.gz,                                          project/raw/sample/lane2/lane1_R2.fastq.gz of each sample.
        * Lane and sample name should not have any dots '.' in it.
                                        
-* Fist Run [TODO]
+* First Run [TODO]
   * Indexing the human genome/or download the indexed genome before alignment
   * Run the pipeline: https://github.com/luuloi/WGBSX10/blob/master/example/example.sh
     * module load phuluu/python/2.7.8
