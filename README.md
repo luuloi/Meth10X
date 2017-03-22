@@ -34,6 +34,7 @@ of these samples
   * [BSgenome.Hsapiens.UCSC.version]  https://github.com/Przemol/BSgenome.Hsapiens.UCSC.version
   * [GenomicRanges]  https://github.com/Bioconductor-mirror/GenomicRanges
   * [rtracklayer]    https://github.com/Bioconductor-mirror/rtracklayer
+  * [python modules] configobj, argparse
   
 * Dependencies:
   * Java version >= 1.8
