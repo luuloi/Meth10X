@@ -72,6 +72,9 @@ of these samples
 * Outputs [TODO]
   * HTML report
     * Table metrics of quality control of WGBS ![optional caption text](example/figures/metrics.png)
-
-
+    * Depth vs Breadth of CpG sites ![optional caption text](example/figures/depth.png)
+    * Overlapping of DNA methylation and SNP calling ![optional caption text](example/figures/snp.png)
+    * PMD, UMR, LMR and HMR calling ![optional caption text](example/figures/methylSeekR.png)
+    * Distribution of methylation ![optional caption text](example/figures/snp.png)
+    * MDS clustering of samples ![optional caption text](example/figures/snp.png)
   * Big table
