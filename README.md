@@ -42,8 +42,8 @@ of these samples
   * Filled sample config file, example https://github.com/luuloi/WGBSX10/blob/master/config/sample.Test_ProstateC.config
   * Filled system config file, example https://github.com/luuloi/WGBSX10/blob/master/config/system.Test_ProstateC.config
   * Note: 
-       * The fastq files are located in Test_ProstateC/raw/LNCaP/lane1/lane1_R1.fastq.gz,                                          Test_ProstateC/raw/LNCaP/lane2/lane1_R2.fastq.gz of each sample.
-       * Lane and sample name should not have a dot '.' in it.
+       * The fastq files are located in Test_ProstateC/raw/LNCaP/lane1/lane1_R1.fastq.gz,                                          Test_ProstateC/raw/sample/lane2/lane1_R2.fastq.gz of each sample.
+       * Lane and sample name should not have any dots '.' in it.
                                        
 * Fist Run: [TODO]
   * Indexing the human genome/or download the indexed genome before alignment
@@ -55,8 +55,12 @@ of these samples
     * python  "WGBS10X/pipe/run_Bpipe.py"  "WGBS10X/config/sample.Test_ProstateC.config"                                "WGBS10X/config/system.Test_ProstateC.config"
 
 * Second Run: [TODO]
+    * module load phuluu/python/2.7.8
+    * module load gi/java/jdk1.8.0_25
+    * module load phuluu/bpipe/0.9.9.2
 
+    * python  "WGBS10X/pipe/run_Bpipe.py"  "WGBS10X/config/sample.Test_ProstateC.config"                                "WGBS10X/config/system.Test_ProstateC.config"
 
 * Outputs [TODO]
-  * Big table of 2 samples
   * HTML report
+  * Big table
