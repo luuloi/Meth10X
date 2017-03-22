@@ -30,7 +30,10 @@ of these samples
   * [merge_columns_multi_tsv] https://github.com/luuloi/merge_columns_multi_tsv
   * [UCSC-format-file-converter]  http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/
   * [ggplot2]      https://github.com/tidyverse/ggplot2
-
+  * [BSgenome.Hsapiens.UCSC.version]  https://github.com/Przemol/BSgenome.Hsapiens.UCSC.version
+  * [GenomicRanges]  https://github.com/Bioconductor-mirror/GenomicRanges
+  * [rtracklayer]    https://github.com/Bioconductor-mirror/rtracklayer
+  
 * Dependencies: [TODO]
   * Java version >= 1.8
   * All the above listed software packages
