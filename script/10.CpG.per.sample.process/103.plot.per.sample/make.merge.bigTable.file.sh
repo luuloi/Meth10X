@@ -21,6 +21,13 @@ echo `date`" - MD_CpG.merge" > $LOGFILE
 cmd=""" echo $input > "$output/${sample}.MD_CpG.merge" """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo `date`" - Finished MD_CpG.merge" >> $LOGFILE
 
+echo `date`" - MD_CpG.filter.out.snp.merge" > $LOGFILE
+# paste <(head /home/phuluu/Projects/WGBS10X_new/V02/annotations/hg19/hg19.CpG.bed| cut -f1,3,6) \
+# <(zcat /home/phuluu/data/WGBS10X_new/Test_Prostate/called/PrEC/PrEC.MD_CpG.filter.out.snp.tsv| cut -f5,6|head) \
+# <(zcat /home/phuluu/data/WGBS10X_new/Test_Prostate/called/LNCaP/LNCaP.MD_CpG.filter.out.snp.tsv| cut -f5,6| head)
+cmd=""" echo ${input/.tsv.gz/.filter.out.snp.tsv.gz} > "$output/${sample}.MD_CpG.filter.out.snp.merge" """
+echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo `date`" - Finished MD_CpG.filter.out.snp.tsv.merge" >> $LOGFILE
+
 echo `date`" - MD.strand_CpG.merge" >> $LOGFILE
 # paste <(head /home/phuluu/Projects/WGBS10X_new/V02/annotations/hg19/hg19.CpG.strands.bed| cut -f1,3,6) \
 # <(zcat /home/phuluu/data/WGBS10X_new/Test_Prostate/called/PrEC/PrEC.MD.strands_CpG.tsv.gz| cut -f5,6|head) \

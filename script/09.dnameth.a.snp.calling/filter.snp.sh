@@ -7,14 +7,17 @@
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH
 source /etc/profile.d/modules.sh
 module load gi/bedtools/2.22.0
+BASEDIR=`readlink -f "${0%/*}"`
+
 
 # get paramaters
 # $1=aligned/PrEC/PrEC.bam
 sample=$(basename $1| cut -d. -f1)
-# $2=calls/PrEC
+# $2=calls/PrEC           .MD_CpG.filter.out.snp.tsv
 input_MD="$2/${sample}.MD_CpG.tsv"
 input_BC="$2/${sample}.BC.snp.vcf.gz"
 output="$2/${sample}.snp.filter.summary.txt"
+GENOME=$3
 # # example
 # input="/home/phuluu/data/WGBS10X_new/Test_Prostate/merged/PrEC/PrEC.bam"
 # sample="PrEC"
@@ -37,7 +40,7 @@ echo $cmd >> $LOGFILE; eval $cmd 2>> $LOGFILE;
 
 echo " - Intersect CpG > 0 coverage table with SNP table and filter out these SNPs" >> $LOGFILE
 cmd="""
-bedtools intersect -a ${input_MD}.bed -b <(zcat $input_BC) -v| awk '{print \$1,\$2+1,\$4,\$5}' > ${input_MD}.filter.out.snp.tsv
+bedtools intersect -a ${input_MD}.bed -b <(zcat $input_BC) -v| awk '{OFS=\"\t\"}{print \$1,\$2,\$3,0,\$4,\$5-\$4}' > ${input_MD}.filter.out.snp.tsv
 """
 echo $cmd >> $LOGFILE; eval $cmd 2>> $LOGFILE
 
@@ -58,10 +61,17 @@ echo "Number of CpGs with at least 1 coverage = $nrow_before" > $output;
 echo "Number of CpGs and SNPs overlaping = $overlap" >> $output;
 echo "Percent overlaping = ${percent}%" >> $output;
 
+echo "Make full data frame for CpG merge filtered SNP rows" >> $LOGFILE
+cmd="""
+python $BASEDIR/methyldackel.CpG_merge.py ${input_MD}.filter.out.snp.tsv ${GENOME/.fa/.CpG.bed} ${input_MD/.tsv/.filter.out.snp.tsv} $sample
+"""
+echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished - CpG merg\n" >> $LOGFILE
+
+
 echo "*** Zip the output file"  >> $LOGFILE
 cmd="""
 rm ${input_MD}.bed;
-gzip ${input_MD}.filter.out.snp.tsv;
+gzip ${input_MD/.tsv/.filter.out.snp.tsv};
 """
 echo $cmd >> $LOGFILE; eval $cmd 2>> $LOGFILE
 

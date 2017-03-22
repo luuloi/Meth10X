@@ -7,8 +7,8 @@ mkdir Test_ProstateC
 cp -r Test_ProstateB/raw Test_ProstateC/
 
 
-python "WGBS10X/pipe/run_Bpipe.py" \
-               "WGBS10X/config/sample.Test_ProstateC.config" \
-               "WGBS10X/config/system.Test_ProstateC.config"
+python "/home/phuluu/Projects/WGBS10X_new/V04/pipe/run_Bpipe.py" \
+               "/home/phuluu/Projects/WGBS10X_new/V04/config/sample.Test_ProstateC.config" \
+               "/home/phuluu/Projects/WGBS10X_new/V04/config/system.Test_ProstateC.config"
 
 

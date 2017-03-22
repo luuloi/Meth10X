@@ -32,7 +32,7 @@ done
 cmd="$cmd > $output/bigTable.snp.vcf"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished merge\n" >> $LOGFILE
 
-cmd="gzip $output/bigTable.snp.vcf"
+cmd="gzip -f $output/bigTable.snp.vcf"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished zip\n" >> $LOGFILE
 
 # cmd="tabix -f -p vcf $output/bigTable.snp.vcf.gz"

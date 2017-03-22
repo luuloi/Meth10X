@@ -245,7 +245,7 @@ methyldackel_compute_meth_average = {
 filter_snp = {
 	output.dir = "called/" + input1.split("/")[-2]
 	def sample = input1.split("/")[-2]
-	from('.BC.snp.vcf.gz') produce(sample+'.snp.filter.summary.txt',sample+'.MD_CpG.tsv.filter.out.snp.tsv.gz'){
+	from('.BC.snp.vcf.gz') produce(sample+'.snp.filter.summary.txt',sample+'.MD_CpG.filter.out.snp.tsv.gz'){
 		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/filter.snp.sh" "$input.BC.snp.vcf.gz" "$output.dir" "$GENOME" """, "filter_snp"
 	}
 	forward inputs
@@ -369,7 +369,7 @@ compute_CpG_coverage_per_sample = {
 // make_merge_bigTable_file
 make_merge_bigTable_file = {
 	output.dir = "bigTable/merge"
-	from('.MD_CpG.tsv.gz') transform('.MD_CpG.merge', '.MD.strands_CpG.merge', '.MD.strands_CHG.merge', '.MD.strands_CHH.merge', '.MD.strands_lambda.merge', '.BC.snp.vcf.merge'){
+	from('.MD_CpG.tsv.gz') transform('.MD_CpG.merge', '.MD_CpG.filter.out.snp.merge','.MD.strands_CpG.merge', '.MD.strands_CHG.merge', '.MD.strands_CHH.merge', '.MD.strands_lambda.merge', '.BC.snp.vcf.merge'){
 		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/103.plot.per.sample/make.merge.bigTable.file.sh" "$input.MD_CpG.tsv.gz" "$output.dir" """, "make_merge_bigTable_file"
 	}
 }
@@ -388,6 +388,13 @@ bigTable_tsv_gz = {
 	output.dir = "bigTable"
 	produce('bigTable.tsv.gz'){
 	exec """ bash "$BASEDIR/script/11.bigTables/MD_CpG.merge.sh" "$inputs" "$output.dir" """, "bigTable_tsv_gz"
+	}
+}
+
+bigTable_filtered_snp_tsv_gz = {
+	output.dir = "bigTable"
+	produce('bigTable.filtered.snp.tsv.gz'){
+	exec """ bash "$BASEDIR/script/11.bigTables/MD_CpG.filter.out.snp.merge.sh" "$inputs" "$output.dir" """, "bigTable_tsv_gz"
 	}
 }
 

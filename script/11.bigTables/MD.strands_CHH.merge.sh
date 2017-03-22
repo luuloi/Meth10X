@@ -30,7 +30,7 @@ done
 cmd="$cmd > $output/bigTable.CHH.strand.tsv"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished merge\n" >> $LOGFILE
 
-cmd="gzip $output/bigTable.CHH.strand.tsv"
+cmd="gzip -f $output/bigTable.CHH.strand.tsv"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished zip\n" >> $LOGFILE
 
 echo `date`" Finished merge MD.strands_CHH samples into bigTable" >> $LOGFILE

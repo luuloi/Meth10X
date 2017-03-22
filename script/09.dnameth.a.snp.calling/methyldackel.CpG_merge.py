@@ -38,7 +38,7 @@ O.write(line)
 for lg in g:
 	lgs = lg.strip().split("\t")
 	if (lgs[0] == las[0]) and (lgs[1] == las[1]):
-		line = lgs[0] + "\t" + lgs[1] + "\t" + las[4] + "\t" + str(int(las[4]) + int(las[5])) + "\n"
+		line = lgs[0] + "\t" + str(int(lgs[1])+1) + "\t" + las[4] + "\t" + str(int(las[4]) + int(las[5])) + "\n"
 		O.write(line)
 		las = "NoNo"
 		try:
@@ -48,7 +48,7 @@ for lg in g:
 		except:
 			las = "NoNo"
 	else:
-		line = lgs[0] + "\t" + lgs[1] + "\t" + "0" + "\t" + "0" + "\n"
+		line = lgs[0] + "\t" + str(int(lgs[1])+1) + "\t" + "0" + "\t" + "0" + "\n"
 		O.write(line)
 O.close()
 a.close()

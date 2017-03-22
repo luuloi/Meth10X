@@ -41,6 +41,7 @@ run { "%_R*.fastq.gz" * [ trim_fastq + alignment_and_mark_duplication + check_ma
                   	] +
 
         [ bigTable_tsv_gz , 
+          bigTable_filtered_snp_tsv_gz ,
           bigTable_strand_tsv_gz , 
           bigTable_lambda_strand_tsv_gz ,
           bigTable_CHG_strand_tsv_gz , 

@@ -31,7 +31,7 @@ done
 cmd="$cmd > $output/bigTable.lambda.strand.tsv"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished merge\n" >> $LOGFILE
 
-cmd="gzip $output/bigTable.lambda.strand.tsv"
+cmd="gzip -f $output/bigTable.lambda.strand.tsv"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished zip\n" >> $LOGFILE
 
 echo `date`" Finished merge MD.strands_lambda samples into bigTable" >> $LOGFILE
