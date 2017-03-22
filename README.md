@@ -42,7 +42,7 @@ of these samples
 
 * Installation:
   * git clone git@github.com:luuloi/WGBSX10.git
-   or
+  * or
   * git clone https://github.com/luuloi/WGBSX10.git
   
 * Inputs require: 
