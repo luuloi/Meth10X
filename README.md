@@ -103,9 +103,13 @@ of these samples
   * Output folder structure
     * .
 ├── aligned
+
 │   ├── LNCaP
+
 │   ├── PrEC
+
 │   └── PrEC_1
+
 ├── bigTable
 │   ├── bigTable.CHG.strand.tsv.gz
 │   ├── bigTable.CHH.strand.tsv.gz
