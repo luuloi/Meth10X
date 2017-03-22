@@ -42,9 +42,8 @@ of these samples
   * Filled sample config file, example https://github.com/luuloi/WGBSX10/blob/master/config/sample.Test_ProstateC.config
   * Filled system config file, example https://github.com/luuloi/WGBSX10/blob/master/config/system.Test_ProstateC.config
   * Note: 
-          * The fastq files are located in Test_ProstateC/raw/LNCaP/lane1/lane1_R1.fastq.gz
-                                           Test_ProstateC/raw/LNCaP/lane2/lane1_R2.fastq.gz
-          * lane and sample name should not have a dot '.' in it
+       * The fastq files are located in Test_ProstateC/raw/LNCaP/lane1/lane1_R1.fastq.gz,                                          Test_ProstateC/raw/LNCaP/lane2/lane1_R2.fastq.gz of each sample.
+       * lane and sample name should not have a dot '.' in it.
                                        
 * Fist Run: [TODO]
   * Indexing the human genome/or download the indexed genome before alignment
