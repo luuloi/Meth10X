@@ -8,7 +8,7 @@
   * Bigwig files of whole genome coverage, only CpG coverage, CpG methylation of each sample for IGV visualization
 of these samples
 
-* WGBSX10 helps to fasten the whole workflow of WGBS as well as enhance the accurate of methylation and SNP calling.
+* WGBSX10 helps to speed up the whole workflow of high coverage WGBS as well as enhance the accurate of methylation and SNP calling.
 
 * WGBSX10 is built based on in-house bash/python/perl/R script, Bpipe and a collection of software packages:
   * [bwa]          https://github.com/lh3/bwa
