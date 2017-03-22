@@ -1,7 +1,7 @@
 # WGBSX10
 
 * WGBSX10 is a pipeline of parallel alignment whole genome bisulfite sequencing (WGBS) or nucleosome occupancy and DNA methylation (NOMEseq) from fastq files of multi samples (approx. 8-16 samples with more than 20X coverage for each) and generating:
-  * An HTML report of quality control detail metrics: percent mapped reads, methylation average of CpG and non-CpG, bisulfite conversion rate, CpG islands/shores bias, percent SNP overlapping with CpG sites.
+  * An HTML report of quality control detail metrics: percent mapped reads, methylation average of CpG and non-CpG, bisulfite conversion rate, CpG islands/shores bias, coverage bias between all sites and CpG sites, percent SNP overlapping with CpG sites, Top 4 SNPs in each sample.
   * A tsv big table of CG/CHH/CHG with filtered/unfiltered SNP
   * SNP calling
   * PMD, LMR, UMR, HMR calling 
