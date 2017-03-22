@@ -8,6 +8,8 @@
   * Bigwig files of whole genome coverage, only CpG coverage, CpG methylation of each sample for IGV visualization
 of these samples
 
+* WGBSX10 is designed for running on cluster such as SGE/PBS. It requires 4GB of memory to maintain the running of the whole workflow.
+
 * WGBSX10 helps to speed up the whole workflow of high coverage WGBS as well as enhance the accurate of methylation and SNP calling.
 
 * WGBSX10 is built based on in-house bash/python/perl/R script, Bpipe and a collection of software packages:
