@@ -48,13 +48,11 @@ of these samples
 * Fist Run: [TODO]
   * Indexing the human genome/or download the indexed genome before alignment
   * Run the pipeline:
-  module load phuluu/python/2.7.8
-  module load gi/java/jdk1.8.0_25
-  module load phuluu/bpipe/0.9.9.2
+    * module load phuluu/python/2.7.8
+    * module load gi/java/jdk1.8.0_25
+    * module load phuluu/bpipe/0.9.9.2
 
-  python "WGBS10X/pipe/run_Bpipe.py" \
-                                    "WGBS10X/config/sample.Test_ProstateC.config" \
-                                    "WGBS10X/config/system.Test_ProstateC.config"
+    * python "WGBS10X/pipe/run_Bpipe.py" "WGBS10X/config/sample.Test_ProstateC.config"                             "WGBS10X/config/system.Test_ProstateC.config"
 
 * Second Run: [TODO]
 
