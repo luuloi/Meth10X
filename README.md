@@ -42,6 +42,8 @@ of these samples
 
 * Installation:
   * git clone git@github.com:luuloi/WGBSX10.git
+  * or
+  * git clone https://github.com/luuloi/WGBSX10.git
   
 * Inputs require: 
   * Paired fastq files in .gz format for each sample
