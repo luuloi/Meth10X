@@ -38,7 +38,13 @@ of these samples
   
 * Dependencies
   * Java version >= 1.8
-  * All the above listed software packages
+  * All the above listed software packages, here are some commands to install python and R packages
+    * [python version >= 2.7] 
+      * pip install configobj argparse
+    * [R version >= 3.2] 
+      * source("https://bioconductor.org/biocLite.R")
+      * biocLite(c("BSgenome.Hsapiens.UCSC.hg19", "rtracklayer", "GenomicRanges", "MethylSeekR")) 
+      * install.packages(c("ggplot2", "data.table", "ggfortify", "knitr"))
 
 * Installation
   * git clone git@github.com:luuloi/WGBSX10.git
