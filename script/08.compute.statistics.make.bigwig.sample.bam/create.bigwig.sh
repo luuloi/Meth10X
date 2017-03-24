@@ -35,8 +35,8 @@ echo `date`" *** Calculated depth statistics" > $LOGFILE
 # echo "R --vanilla -e 'f=\'${INPUT}\'; options(scipen=100); library(rtracklayer); x <- import(paste0(f, '.coverage.bedGraph')); w <- as.numeric(width(x)); s <- as.numeric(S4Vectors::mcols(x)[['score']]); writeLines(paste(c('depth:', 'mean_coverage:'), c(sum(w*s), weighted.mean(s, w))), paste0(f, '.depth'))" >> $LOGFILE
 # R --vanilla -e "f=\"${INPUT}\"; options(scipen=100); library(rtracklayer); x <- import(paste0(f, '.coverage.bedGraph')); w <- as.numeric(width(x)); s <- as.numeric(S4Vectors::mcols(x)[['score']]); writeLines(paste(c('depth:', 'mean_coverage:'), c(sum(w*s), weighted.mean(s, w))), paste0(f, '.depth'))" 2>> $LOGFILE
 # awk '{OFS=""}BEGIN{w=0;s=0}{w+=($3-$2); s+=(($3-$2)*$4);}END{print "depth: ", s, "\n", "mean_coverage: ", s/w}' JW_21.1000.coverage.bedGraph
-echo """ awk '{OFS=""}BEGIN{w=0;s=0}{w+=($3-$2); s+=(($3-$2)*$4);}END{print "depth: ", s, "\n", "mean_coverage: ", s/w}' "${INPUT}.coverage.bedGraph" > "${INPUT}.coverage.bedGraph" """ >> $LOGFILE
-awk '{OFS=""}BEGIN{w=0;s=0}{w+=($3-$2); s+=(($3-$2)*$4);}END{print "depth: ", s, "\n", "mean_coverage: ", s/w}' "${INPUT}.coverage.bedGraph" > "${INPUT}.coverage.bedGraph" 2>> $LOGFILE
+echo """ awk '{OFS=""}BEGIN{w=0;s=0}{w+=(\$3-\$2); s+=((\$3-\$2)*\$4);}END{print \"depth: \", s, \"\\n\", \"mean_coverage: \", s/w}' "${INPUT}.coverage.bedGraph" > "$OUTPUT/${sample}.depth" """ >> $LOGFILE
+awk '{OFS=""}BEGIN{w=0;s=0}{w+=($3-$2); s+=(($3-$2)*$4);}END{print "depth: ", s, "\n", "mean_coverage: ", s/w}' "${INPUT}.coverage.bedGraph" > "$OUTPUT/${sample}.depth" 2>> $LOGFILE
 echo `date`" - Finished calculate depth" >> $LOGFILE
 ### example
 # head 5060_bis_6_CEGX/5060_bis_6_CEGX.coverage.bedGraph
