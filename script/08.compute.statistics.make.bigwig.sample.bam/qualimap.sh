@@ -5,7 +5,7 @@ export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterS
 unset DISPLAY
 source /etc/profile.d/modules.sh
 module load gi/java/jdk1.8.0_25
-module load gi/qualimap/1.0
+module load phuluu/qualimap/2.2.1
 module load gi/samtools/1.2
 module load gi/samstat/1.08
 module load phuluu/python/2.7.8
@@ -22,8 +22,8 @@ echo `date`" *** Created Qualimap" > $LOGFILE
 echo """ mkdir -p $OUTPUT """ >> $LOGFILE 
 mkdir -p $OUTPUT 2>> $LOGFILE
 
-echo """ qualimap bamqc -bam $1 -gd HUMAN -outdir $OUTPUT -nt 4 -nr 10000 """ >> $LOGFILE
-qualimap bamqc -bam $1 -gd HUMAN -outdir $OUTPUT -nt 4 -nr 10000 2>> $LOGFILE
+echo """ qualimap bamqc -bam $1 -gd HUMAN -outdir $OUTPUT -nt 8 -nr 100000 --java-mem-size=24G""" >> $LOGFILE
+qualimap bamqc -bam $1 -gd HUMAN -outdir $OUTPUT -nt 8 -nr 100000 --java-mem-size=24G 2>> $LOGFILE
 
 # python coverage.vs.depth.whole.genome.py genome_results.txt genome_coverage.tsv sample
 # echo python "$BASEDIR/coverage.vs.depth.whole.genome.py" "${OUTPUT}/QC/genome_results.txt" "${OUTPUT}/QC/genome_coverage.tsv" "$sample" >> $LOGFILE  
