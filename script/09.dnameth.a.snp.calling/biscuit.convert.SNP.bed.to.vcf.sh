@@ -31,7 +31,6 @@ tabix -h  ${output}/${sample}.BC.vcf.gz -B ${output}/${sample}.BC.snp.bed| grep 
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 echo `date`" Finished convert bed to vcf: SNP calling" >> $LOGFILE
 
-echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 cmd="""bgzip ${output}/${sample}.BC.snp.vcf"""
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 
