@@ -111,7 +111,7 @@ commands {
     }
     qualimap {
         executor = "sge"
-		procs = "smp 8"
+		procs = "smp 4"
 		sge_request_options = "-P EpigeneticsResearch -l mem_requested=8G,h_vmem=8G -cwd -S /bin/bash"
     }
     // 09.dnameth.a.snp.calling
