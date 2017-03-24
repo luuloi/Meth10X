@@ -13,11 +13,11 @@ of these samples
 * WGBSX10 helps to speed up the whole workflow of high coverage WGBS as well as enhance the accurate of methylation and SNP calling.
 
 * WGBSX10 is built based on in-house bash/python/perl/R script, Bpipe and a collection of software packages:
-  * [bwa]          https://github.com/lh3/bwa
-  * [bwa-meth]     https://github.com/brentp/bwa-meth
-  * [samtools]     https://github.com/samtools/
-  * [tabix]        https://github.com/samtools/tabix
-  * [qualimap]     http://qualimap.bioinfo.cipf.es/
+  * [bwa]                 https://github.com/lh3/bwa
+  * [bwa-meth, 1.0]       https://github.com/brentp/bwa-meth
+  * [samtools, 1.2.0]     https://github.com/samtools/
+  * [tabix, 0.2.6]        https://github.com/samtools/tabix
+  * [qualimap, 2.2.1]     http://qualimap.bioinfo.cipf.es/
   * [SAMStat]      http://samstat.sourceforge.net/
   * [picardtools]  https://github.com/broadinstitute/picard
   * [bedtools]     https://github.com/arq5x/bedtools2
