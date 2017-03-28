@@ -70,10 +70,10 @@ of these samples
     
     * mkdir -p Test_ProstateC/raw
     * copy fastq files to Test_ProstateC/raw as following
-    * cp sample1/lane1/*.fastq  Test_ProstateC/raw/sample1/lane1/
-    * cp sample1/lane2/*.fastq  Test_ProstateC/raw/sample1/lane2/
-    * cp sample2/lane1/*.fastq  Test_ProstateC/raw/sample2/lane1/
-    ....
+      * cp sample1/lane1/*.fastq   Test_ProstateC/raw/sample1/lane1/
+      * cp sample1/lane2/*.fastq   Test_ProstateC/raw/sample1/lane2/
+      * cp sample2/lane1/*.fastq   Test_ProstateC/raw/sample2/lane1/
+      ....
 
     * python  "WGBS10X/pipe/run_Bpipe.py"  "WGBS10X/config/sample.Test_ProstateC.config"                                "WGBS10X/config/system.Test_ProstateC.config"
 
