@@ -53,7 +53,7 @@ LOGFILE="${OUTPUT}/${sample}.coverage.distribution.whole.genome.log"
 echo `date`" *** Calculated coverage distribution for each site in genome" > $LOGFILE
 echo -e "Sample\tDepth\tFraction" > "$OUTPUT/QC/genome_coverage.tsv"
 cmd="""
-awk '{OFS=\"\t\"}{print \$4, \$3-\$2}' ${INPUT}.coverage.bedGraph| sort -k1,1n| awk '{arr[\$1]+=\$2;sum+=\$2}END{for(i in arr){print \"$sample\",\"\t\",i,\"\t\",100*arr[i]/sum}}'| sort -k2,2n >> $OUTPUT/QC/genome_coverage.tsv
+awk '{OFS=\"\t\"}{print \$4, \$3-\$2}' ${INPUT}.coverage.bedGraph| sort -k1,1n -T $OUTPUT| awk '{arr[\$1]+=\$2;sum+=\$2}END{for(i in arr){print \"$sample\",\"\t\",i,\"\t\",100*arr[i]/sum}}'| sort -k2,2n >> $OUTPUT/QC/genome_coverage.tsv
 """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 

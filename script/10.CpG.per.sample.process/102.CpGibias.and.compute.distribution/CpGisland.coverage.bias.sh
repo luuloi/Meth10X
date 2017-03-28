@@ -72,7 +72,7 @@ echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 echo " - Count CpG coverage in CpG islands/shores/others" >> "$LOGFILE"
 echo -e "Regions\tCoverage\tFrequency" > "$OUTPUT/${sample}.CpG.bias.plot.tsv"
 cmd="""
-sort -k1,1 -k2,2n "$OUTPUT/${sample}.CpG.bias.plot.tsv.tmp"| uniq -c| awk '{OFS=\"\t\"}{print \$2,\$3,\$1}' >> "$OUTPUT/${sample}.CpG.bias.plot.tsv"
+sort -T $OUTPUT -k1,1 -k2,2n "$OUTPUT/${sample}.CpG.bias.plot.tsv.tmp"| uniq -c| awk '{OFS=\"\t\"}{print \$2,\$3,\$1}' >> "$OUTPUT/${sample}.CpG.bias.plot.tsv"
 """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 

@@ -30,7 +30,7 @@ echo `date`" - Smooth methylation ratio CpG and compute methylation distribution
 # CpG shores
 cmd="""
 bedtools intersect -a $CpGshores -b "$OUTPUT/${sample}.methratio.bed" -wa -wb| \
-bedtools groupby -i - -g 1,2,3 -c 10 -o mean| awk '{ printf \"%.4f\n\", \$4}'| sort| uniq -c| \
+bedtools groupby -i - -g 1,2,3 -c 10 -o mean| awk '{ printf \"%.4f\n\", \$4}'| sort -T $OUTPUT| uniq -c| \
 awk -v sample=$sample '{OFS=\"\t\"}{print sample,\$2,\$1}' > "$OUTPUT/${sample}.distribution.CpGshores.tsv"
 """ 
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"

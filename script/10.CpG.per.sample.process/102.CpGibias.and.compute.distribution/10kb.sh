@@ -30,7 +30,7 @@ echo `date`" - Smooth methylation ratio CpG and compute methylation distribution
 # 10kb
 cmd="""
 bedtools intersect -a <(bedtools makewindows -g $GSIZE -w 10000) -b "$OUTPUT/${sample}.methratio.bed" -wa -wb| \
-bedtools groupby -i - -g 1,2,3 -c 7 -o mean| awk '{ printf \"%.4f\n\", \$4}'| sort| uniq -c| awk -v sample=$sample '{OFS=\"\t\"}{print sample,\$2,\$1}' > "$OUTPUT/${sample}.distribution.10kb.tsv"
+bedtools groupby -i - -g 1,2,3 -c 7 -o mean| awk '{ printf \"%.4f\n\", \$4}'| sort -T $OUTPUT| uniq -c| awk -v sample=$sample '{OFS=\"\t\"}{print sample,\$2,\$1}' > "$OUTPUT/${sample}.distribution.10kb.tsv"
 """ 
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 echo `date`" - Finished processing $1" >> "$LOGFILE"

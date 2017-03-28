@@ -31,7 +31,7 @@ echo " - Compute coverage for each CpG" >> "$LOGFILE"
 
 echo -e "Sample\tDepth\tFraction" > "$OUTPUT/${sample}.CpG.coverage.tsv"
 cmd="""
-zcat $INPUT|egrep \"chr[0-9XYM]\"| awk 'NR>1{if(\$3>\$4){exit}else{print \$4}}'| sort -n| uniq -c| awk '{OFS=\"\t\"}{arr[\$2]=\$1;sum+=\$1}END{for(i in arr){print \"$sample\",i,100*arr[i]/sum}}'| sort -k2,2n >> $OUTPUT/${sample}.CpG.coverage.tsv
+zcat $INPUT|egrep \"chr[0-9XYM]\"| awk 'NR>1{if(\$3>\$4){exit}else{print \$4}}'| sort -n -T $OUTPUT| uniq -c| awk '{OFS=\"\t\"}{arr[\$2]=\$1;sum+=\$1}END{for(i in arr){print \"$sample\",i,100*arr[i]/sum}}'| sort -k2,2n >> $OUTPUT/${sample}.CpG.coverage.tsv
 """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 

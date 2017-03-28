@@ -34,7 +34,7 @@ echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 
 echo -e "Chrom\tCoverage\tFrequency" > "$OUTPUT/${sample}.CpG.coverage.per.chrom.tsv"
 cmd="""
-awk '{print \$1,\"\t\",\$4}' "$OUTPUT/${sample}.cov.bed"| sort -k1,1 -k2,2n| uniq -c| awk '{OFS=\"\t\"}{print \$2,\$3,\$1}' >> "$OUTPUT/${sample}.CpG.coverage.per.chrom.tsv"
+awk '{print \$1,\"\t\",\$4}' "$OUTPUT/${sample}.cov.bed"| sort -k1,1 -k2,2n -T $OUTPUT| uniq -c| awk '{OFS=\"\t\"}{print \$2,\$3,\$1}' >> "$OUTPUT/${sample}.CpG.coverage.per.chrom.tsv"
 """ 
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 

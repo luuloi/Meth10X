@@ -14,7 +14,7 @@ LOGFILE="${OUTPUT}/${sample}.count.mapq.score.log"
 
 echo " *** Count MAPQ score" > $LOGFILE
 echo `date`" - Started processing $INPUT on $HOSTNAME" >> $LOGFILE
-echo """ samtools view $INPUT| cut -f5 | sort -n | uniq -c > $OUTPUT/${sample}.mapq """ >> $LOGFILE
-samtools view $INPUT| cut -f5 | sort -n | uniq -c > "$OUTPUT/${sample}.mapq" 2>> $LOGFILE
+echo """ samtools view $INPUT| cut -f5 | sort -n -T $OUTPUT| uniq -c > $OUTPUT/${sample}.mapq """ >> $LOGFILE
+samtools view $INPUT| cut -f5 | sort -n -T $OUTPUT| uniq -c > "$OUTPUT/${sample}.mapq" 2>> $LOGFILE
 echo `date`" - Finished count MAPQ bam" >> $LOGFILE
 

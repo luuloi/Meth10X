@@ -24,7 +24,8 @@ LOGFILE="$OUTPUT/${sample}.compute.distribution.single.CpG.log"
 echo `date`" - Smooth methylation ratio CpG and compute methylation distribution" > "$LOGFILE"
 # single CpG
 cmd="""
-cut -f4 "$OUTPUT/${sample}.methratio.bed"| sort| uniq -c| awk -v sample=$sample '{OFS=\"\t\"}{print sample,\$2,\$1}' > "$OUTPUT/${sample}.distribution.Single_CpGs.tsv"
+cut -f4 "$OUTPUT/${sample}.methratio.bed"| sort -T $OUTPUT| uniq -c| awk -v sample=$sample '{OFS=\"\t\"}{print sample,\$2,\$1}' > "$OUTPUT/${sample}.distribution.Single_CpGs.tsv"
 """ 
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 echo `date`" - Finished processing $1" >> "$LOGFILE"
+
