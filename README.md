@@ -13,37 +13,37 @@ of these samples
 * WGBSX10 helps to speed up the whole workflow of high coverage WGBS as well as enhance the accurate of methylation and SNP calling.
 
 * WGBSX10 is built based on in-house bash/python/perl/R script, Bpipe and a collection of software packages:
-  * [bwa]                 https://github.com/lh3/bwa
-  * [bwa-meth, 1.0]       https://github.com/brentp/bwa-meth
-  * [samtools, 1.2.1]     https://github.com/samtools/
-  * [tabix, 1.2.1]        https://github.com/samtools/tabix
-  * [qualimap, 2.2.1]     http://qualimap.bioinfo.cipf.es/
-  * [SAMStat]      http://samstat.sourceforge.net/
-  * [picardtools]  https://github.com/broadinstitute/picard
-  * [bedtools]     https://github.com/arq5x/bedtools2
-  * [Bpipe]        https://github.com/ssadedin/bpipe
-  * [bamUtil]      https://github.com/statgen/bamUtil
-  * [MethylDackel] https://github.com/dpryan79/MethylDackel
-  * [Biscuit]      https://github.com/zwdzwd/biscuit
-  * [MethylSeekR]  https://github.com/Bioconductor-mirror/MethylSeekR
-  * [Vcf-tools]    https://github.com/vcftools
-  * [fastqc]       http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
-  * [trimCEGX]     https://github.com/luuloi/trim.paired.read
-  * [makeFullDataFrame] https://github.com/luuloi/make.full.data.frame
-  * [merge_columns_multi_tsv] https://github.com/luuloi/merge_columns_multi_tsv
-  * [UCSC-format-file-converter]  http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/
-  * [ggplot2]      https://github.com/tidyverse/ggplot2
-  * [BSgenome.Hsapiens.UCSC.version]  https://github.com/Przemol/BSgenome.Hsapiens.UCSC.version
-  * [GenomicRanges]  https://github.com/Bioconductor-mirror/GenomicRanges
-  * [rtracklayer]    https://github.com/Bioconductor-mirror/rtracklayer
+  * [bwa, 0.7.9a]                      https://github.com/lh3/bwa
+  * [bwa-meth, 0.10]                   https://github.com/brentp/bwa-meth
+  * [samtools, 1.4]                    https://github.com/samtools/
+  * [tabix, 1.4]                       https://github.com/samtools/tabix
+  * [qualimap, 2.2.1]                  http://qualimap.bioinfo.cipf.es/
+  * [SAMStat, 1.08]                    http://samstat.sourceforge.net/
+  * [picardtools, 2.3.0]               https://github.com/broadinstitute/picard
+  * [bedtools, 2.22.0]                 https://github.com/arq5x/bedtools2
+  * [Bpipe, 0.9.9.2]                   https://github.com/ssadedin/bpipe
+  * [bamUtil, 1.0.7]                   https://github.com/statgen/bamUtil
+  * [MethylDackel, 0.2.0]              https://github.com/dpryan79/MethylDackel
+  * [Biscuit, 0.2.0]                   https://github.com/zwdzwd/biscuit
+  * [MethylSeekR, 1.0]                 https://github.com/Bioconductor-mirror/MethylSeekR
+  * [Vcf-tools, 0.1.15]                https://github.com/vcftools
+  * [fastqc, 0.11.5]                   http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+  * [trimCEGX, 1.0]                    https://github.com/luuloi/trim.paired.read
+  * [makeFullDataFrame, 1.0]           https://github.com/luuloi/make.full.data.frame
+  * [merge_columns_multi_tsv, 1.0]     https://github.com/luuloi/merge_columns_multi_tsv
+  * [UCSC-format-file-converter, 1.0]  http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/
+  * [ggplot2]                          https://github.com/tidyverse/ggplot2
+  * [BSgenome.Hsapiens.UCSC.version]   https://github.com/Przemol/BSgenome.Hsapiens.UCSC.version
+  * [GenomicRanges]                    https://github.com/Bioconductor-mirror/GenomicRanges
+  * [rtracklayer]                      https://github.com/Bioconductor-mirror/rtracklayer
   * [python modules] configobj, argparse
   
 * Dependencies
   * Java version >= 1.8
   * All the above listed software packages, here are some commands to install python and R packages
-    * [python version >= 2.7] 
+    * [python version >= 2.7.6] 
       * pip install configobj argparse
-    * [R version >= 3.2] 
+    * [R version >= 3.1.2] 
       * source("https://bioconductor.org/biocLite.R")
       * biocLite(c("BSgenome.Hsapiens.UCSC.hg19", "rtracklayer", "GenomicRanges", "MethylSeekR")) 
       * install.packages(c("ggplot2", "data.table", "ggfortify", "knitr"))
@@ -67,6 +67,13 @@ of these samples
     * module load phuluu/python/2.7.8
     * module load gi/java/jdk1.8.0_25
     * module load phuluu/bpipe/0.9.9.2
+    
+    * mkdir -p Test_ProstateC/raw
+    * copy fastq files to Test_ProstateC/raw as following
+    * cp sample1/lane1/*.fastq  Test_ProstateC/raw/sample1/lane1/
+    * cp sample1/lane2/*.fastq  Test_ProstateC/raw/sample1/lane2/
+    * cp sample2/lane1/*.fastq  Test_ProstateC/raw/sample2/lane1/
+    ....
 
     * python  "WGBS10X/pipe/run_Bpipe.py"  "WGBS10X/config/sample.Test_ProstateC.config"                                "WGBS10X/config/system.Test_ProstateC.config"
 
@@ -75,7 +82,7 @@ of these samples
     * module load gi/java/jdk1.8.0_25
     * module load phuluu/bpipe/0.9.9.2
 
-    * python  "WGBS10X/pipe/run_Bpipe.py"  "WGBS10X/config/sample.Test_ProstateC.config"                                "WGBS10X/config/system.Test_ProstateC.config"
+    * python  "WGBS10X/pipe/run_Bpipe.py"  "WGBS10X/config/sample.Prostate.config" "WGBS10X/config/system.Prostate.config"
 
 * Outputs
   * HTML report
