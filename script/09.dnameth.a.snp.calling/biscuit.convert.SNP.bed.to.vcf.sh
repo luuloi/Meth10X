@@ -4,7 +4,7 @@
 # load module
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
 source /etc/profile.d/modules.sh
-module load gi/tabix/0.2.6
+module load phuluu/samtools/1.4
 
 
 # get paramaters
@@ -14,7 +14,7 @@ sample=$(basename $input| cut -d. -f1)
 # $2=aligned/PrEC
 output=$2
 ref=$3
-
+ncores=4
 
 LOGFILE="${output}/${sample}.biscuit.convert.SNP.bed.to.vcf.log"
 echo `date`" *** Biscuit SNP calling" > $LOGFILE
@@ -26,12 +26,12 @@ echo `date`" *** Biscuit SNP calling" > $LOGFILE
 echo "- Convert SNP bed to vcf" >> $LOGFILE
 # tabix -h /home/phuluu/data/WGBS10X_new/Test_Prostate/called/LNCaP/LNCaP.BC.vcf.gz -B /home/phuluu/data/WGBS10X_new/Test_Prostate/called/LNCaP/LNCaP.BC.snp.bed| grep -v lambda
 cmd="""
-tabix -h  ${output}/${sample}.BC.vcf.gz -B ${output}/${sample}.BC.snp.bed| grep -v lambda > ${output}/${sample}.BC.snp.vcf
+tabix -h  ${output}/${sample}.BC.vcf.gz -R ${output}/${sample}.BC.snp.bed| grep -v lambda > ${output}/${sample}.BC.snp.vcf
 """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 echo `date`" Finished convert bed to vcf: SNP calling" >> $LOGFILE
 
-cmd="""bgzip ${output}/${sample}.BC.snp.vcf"""
+cmd="""bgzip -@ $ncores ${output}/${sample}.BC.snp.vcf"""
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"
 
 cmd="""tabix -f -p vcf ${output}/${sample}.BC.snp.vcf.gz"""

@@ -5,7 +5,7 @@
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
 source /etc/profile.d/modules.sh
-
+module load phuluu/pigz/2.3.4
 
 # get paramaters
 # $1=/home/phuluu/data/WGBS10X_new/Test_Prostate/bigTable/merge/*MD_CpG.merge
@@ -34,7 +34,7 @@ done
 cmd="$cmd > $output/bigTable.filtered.snp.tsv"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished merge\n" >> $LOGFILE
 
-cmd="gzip -f $output/bigTable.filtered.snp.tsv"
+cmd="pigz -f $output/bigTable.filtered.snp.tsv"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished zip\n" >> $LOGFILE
 
 echo `date`" Finished merge MD_CpG.filtered.snp samples into bigTable" >> $LOGFILE

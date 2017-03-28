@@ -32,7 +32,6 @@ LOGFILE="$OUTPUT/${sample}.CpGisland.coverage.bias.log"
 
 ### Bias
 echo `date`" - Compute CpG islands/Shores bias" > "$LOGFILE"
-echo -e "Regions\tCoverage" > "$OUTPUT/${sample}.CpG.bias.plot.tsv"
 
 echo " - CpGislands" >> $LOGFILE
 cmd="""

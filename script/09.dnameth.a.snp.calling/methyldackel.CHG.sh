@@ -5,6 +5,8 @@
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
 source /etc/profile.d/modules.sh
 module load phuluu/python/2.7.8
+module load phuluu/pigz/2.3.4
+
 
 # get paramaters
 # $1=aligned/PrEC/PrEC.bam
@@ -32,6 +34,6 @@ echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished - CH
 
 echo "*** Zip output file"  >> $LOGFILE
 cmd="""
-gzip ${output}/${sample}.MD.strands_CHG.tsv;
+pigz ${output}/${sample}.MD.strands_CHG.tsv;
 """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Zip output\n" >> $LOGFILE

@@ -4,6 +4,8 @@
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH
 source /etc/profile.d/modules.sh
+module load phuluu/pigz/2.3.4
+
 BASEDIR=`readlink -f "${0%/*}"`
 
 
@@ -56,7 +58,7 @@ echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished - Cp
 
 echo "*** Zip output file"  >> $LOGFILE
 cmd="""
-gzip < ${output}/${sample}.MD_CpG.tsv > ${output}/${sample}.MD_CpG.tsv.gz;
+pigz -c ${output}/${sample}.MD_CpG.tsv > ${output}/${sample}.MD_CpG.tsv.gz;
 """
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Zip output\n" >> $LOGFILE
 

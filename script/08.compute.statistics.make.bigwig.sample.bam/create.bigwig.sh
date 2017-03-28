@@ -38,6 +38,7 @@ echo `date`" *** Calculated depth statistics" > $LOGFILE
 echo """ awk '{OFS=""}BEGIN{w=0;s=0}{w+=(\$3-\$2); s+=((\$3-\$2)*\$4);}END{print \"depth: \", s, \"\\n\", \"mean_coverage: \", s/w}' "${INPUT}.coverage.bedGraph" > "$OUTPUT/${sample}.depth" """ >> $LOGFILE
 awk '{OFS=""}BEGIN{w=0;s=0}{w+=($3-$2); s+=(($3-$2)*$4);}END{print "depth: ", s, "\n", "mean_coverage: ", s/w}' "${INPUT}.coverage.bedGraph" > "$OUTPUT/${sample}.depth" 2>> $LOGFILE
 echo `date`" - Finished calculate depth" >> $LOGFILE
+
 ### example
 # head 5060_bis_6_CEGX/5060_bis_6_CEGX.coverage.bedGraph
 # chr1	0	10002	0

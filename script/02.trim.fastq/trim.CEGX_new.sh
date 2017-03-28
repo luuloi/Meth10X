@@ -5,6 +5,7 @@
 # load module 
 export MODULEPATH=/share/ClusterShare/Modules/modulefiles/noarch:/share/ClusterShare/Modules/modulefiles/centos6.2_x86_64:/share/ClusterShare/Modules/modulefiles/contrib:$MODULEPATH 
 source /etc/profile.d/modules.sh
+module load phuluu/pigz/2.3.4
 module load gi/java/jdk1.8.0_25
 module load gi/fastqc/0.11.5
 
@@ -26,9 +27,9 @@ O2="$4"
 # DNA from 5' to 3' in R2: Trim 6 bases from 5' of R2 (trim at the start of R2)
 
 cmd="""
-paste <(gunzip < $R1| paste -d\"\t\" - - - -) <(gunzip < $R2| paste -d\"\t\" - - - -)|\
+paste <(unpigz -p 8 < $R1| paste -d\"\t\" - - - -) <(unpigz -p 8 < $R2| paste -d\"\t\" - - - -)|\
 awk -F\"\t\" '{OFS=\"\n\"}{id2=\$5; gsub(/2:N/,\"1:N\",id2); s1=length(\$2); q1=length(\$4); s2=length(\$6); q2=length(\$8);\
-if((s1<length_thres)||(S2<length_thres)){next;}else if((\$1==id2)&&(\$3==\$7)&&((s1-q1+s2-q2)==0)){print \$1, substr(\$2,1,s1-6), \$3, substr(\$4,1,q1-6)|\"gzip > $O1\"; print \$5, substr(\$6,7,s2), \$3, substr(\$8,7,q2)|\"gzip > $O2\";}else{print \"Error occurred at line\",NR; exit;}}'
+if((s1<length_thres)||(S2<length_thres)){next;}else if((\$1==id2)&&(\$3==\$7)&&((s1-q1+s2-q2)==0)){print \$1, substr(\$2,1,s1-6), \$3, substr(\$4,1,q1-6)|\"pigz -p 8 > $O1\"; print \$5, substr(\$6,7,s2), \$3, substr(\$8,7,q2)|\"pigz -p 8 > $O2\";}else{print \"Error occurred at line\",NR; exit;}}'
 """
 echo $cmd >> $LOGFILE; eval $cmd >> $LOGFILE 2>&1
 

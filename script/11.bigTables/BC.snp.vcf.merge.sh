@@ -2,7 +2,7 @@
 # usage: bash methyldackel.sh input output reference
 
 # module
-module load gi/tabix/0.2.6
+module load phuluu/samtools/1.4
 module load phuluu/perl/5.24.1
 export PERL5LIB=/share/ClusterShare/software/contrib/phuluu/vcftools/src/perl/:$PERL5LIB
 module load phuluu/vcftools/0.1.15
@@ -12,6 +12,7 @@ module load phuluu/vcftools/0.1.15
 input=$1
 # $2=bigTables
 output=$2
+ncores=8
 
 LOGFILE="$output/BC.snp.vcf.merge.log"
 # /share/ClusterShare/software/contrib/phuluu/vcftools/bin/vcf-merge \
@@ -32,11 +33,11 @@ done
 cmd="$cmd > $output/bigTable.snp.vcf"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished merge\n" >> $LOGFILE
 
-cmd="gzip -f $output/bigTable.snp.vcf"
+cmd="bgzip -f -@ $ncores $output/bigTable.snp.vcf"
 echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished zip\n" >> $LOGFILE
 
-# cmd="tabix -f -p vcf $output/bigTable.snp.vcf.gz"
-# echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished tabix\n" >> $LOGFILE
+cmd="tabix -f -p vcf $output/bigTable.snp.vcf.gz"
+echo $cmd >> "$LOGFILE"; eval $cmd 2>> "$LOGFILE"; echo -e `date`" Finished tabix\n" >> $LOGFILE
 
 echo `date`" Finished merge BC.snp.vcf.merge samples into bigTable" >> $LOGFILE
 

@@ -185,21 +185,21 @@ methyldackel_CpG_strand_only_lambda = {
 biscuit_pileup = {
 	output.dir = "called/" + input1.split("/")[-2]
 	from('.bam', '.bam.bai') transform('.BC.vcf.gz'){
-		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.pileup.sh" "$input.bam" "$output.dir" "$GENOME" """, "biscuit_pileup"
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.pileup.sh" "$input.bam" "$output.dir" "$GENOME" "$MIN_COV_CpG" """, "biscuit_pileup"
 	}
 }
 
 biscuit_vcf2bed_CpG = {
 	output.dir = "called/" + input1.split("/")[-2]
 	transform('.BC.vcf.gz') to('.BC.CpG.bed.gz'){
-		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.vcf2bed.CpG.sh" "$input.BC.vcf.gz" "$output.dir" "$GENOME" """, "biscuit_vcf2bed_CpG"
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.vcf2bed.CpG.sh" "$input.BC.vcf.gz" "$output.dir" "$GENOME" "$MIN_COV_CpG" """, "biscuit_vcf2bed_CpG"
 	}
 }
 
 biscuit_vcf2bed_SNP = {
 	output.dir = "called/" + input1.split("/")[-2]
 	transform('.BC.vcf.gz') to('.biscuit.vcf2bed.SNP.log'){
-		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.vcf2bed.SNP.sh" "$input.BC.vcf.gz" "$output.dir" "$GENOME" """, "biscuit_vcf2bed_SNP"
+		exec """ bash "$BASEDIR/script/09.dnameth.a.snp.calling/biscuit.vcf2bed.SNP.sh" "$input.BC.vcf.gz" "$output.dir" "$GENOME" "$MIN_COV_SNP" """, "biscuit_vcf2bed_SNP"
 	}
 }
 
@@ -275,14 +275,14 @@ meth_calling_clean = {
 make_bigwig_CpG_coverage = {
 	output.dir = "bigTable/bw"
 	transform('.MD_CpG.tsv.gz') to('.cov.bw'){
-		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.coverage.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV" """, "make_bigwig_CpG_coverage"
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.coverage.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV_CpG" """, "make_bigwig_CpG_coverage"
 	}
 }
 
 make_bigwig_CpG_meth_ratio = {
 	output.dir = "bigTable/bw"
 	transform('.MD_CpG.tsv.gz') to('.bw'){
-		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV" """, "make_bigwig_CpG_meth_ratio"
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV_CpG" """, "make_bigwig_CpG_meth_ratio"
 	}
 }
 
@@ -290,10 +290,10 @@ make_bigwig_CpG_meth_ratio_smooth = {
 	output.dir = "bigTable/bw/smoothed"
 	def sample = input1.split("/")[-1].split("\\.")[0]
 	from('.cov.bw') produce(sample+'.100bp.bw',sample+'.1kb.bw',sample+'.10kb.bw',sample+'.100kb.bw'){
-		multi make_bigwig_CpG_meth_ratio_100bp: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.100bp.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV" "$output" """,
-		make_bigwig_CpG_meth_ratio_1kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.1kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV" """,
-		make_bigwig_CpG_meth_ratio_10kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.10kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV" """,
-		make_bigwig_CpG_meth_ratio_100kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.100kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV" """
+		multi make_bigwig_CpG_meth_ratio_100bp: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.100bp.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV_CpG" "$output" """,
+		make_bigwig_CpG_meth_ratio_1kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.1kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV_CpG" """,
+		make_bigwig_CpG_meth_ratio_10kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.10kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV_CpG" """,
+		make_bigwig_CpG_meth_ratio_100kb: """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.meth.ratio.100kb.sh" "$input.bw" "$output.dir" "$GENOME" "$MIN_COV_CpG" """
 	}
 	forward inputs
 }
@@ -301,7 +301,7 @@ make_bigwig_CpG_meth_ratio_smooth = {
 make_bigwig_CpG_clear = {
 	output.dir = "bigTable/bw"
 	transform('.cov.bw') to('.make.bigwig.CpG.clean.log'){
-		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.clean.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV" """, "make_bigwig_CpG_clear"
+		exec """ bash "$BASEDIR/script/10.CpG.per.sample.process/101.make.bigwig.CpG/make.bigwig.CpG.clean.sh" "$input.MD_CpG.tsv.gz" "$output.dir" "$GENOME" "$MIN_COV_CpG" """, "make_bigwig_CpG_clear"
 	}
 }
 

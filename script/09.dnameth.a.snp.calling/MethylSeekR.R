@@ -53,7 +53,7 @@ setwd(output.dir)
 sample <- commandArgs(TRUE)[5]
 sample.C <- paste0(sample, ".C")
 sample.cov <- paste0(sample, ".cov")
-minMeanCov <- 0.01
+minMeanCov <- 5
 num.cores <- 4
 if (mean(values(CpGs)[[sample.cov]])>=minMeanCov) {
     message("Running MethylSeekR on ", sample)
