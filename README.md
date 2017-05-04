@@ -49,9 +49,9 @@ of these samples
       * install.packages(c("ggplot2", "data.table", "ggfortify", "knitr"))
 
 * Installation
-  * git clone git@github.com:luuloi/WGBSX10.git
+  * git clone git@github.com:luuloi/Meth10X.git
   * or
-  * git clone https://github.com/luuloi/WGBSX10.git
+  * git clone https://github.com/luuloi/Meth10X.git
   
 * Inputs require 
   * Paired fastq files in .gz format for each sample
