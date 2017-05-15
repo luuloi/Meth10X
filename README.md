@@ -2,17 +2,19 @@
 
 * Meth10X (old name: WGBSX10) is a pipeline of parallel alignment whole genome bisulfite sequencing (WGBS) or nucleosome occupancy and DNA methylation (NOMEseq) from fastq files of multi samples (approx. 8-16 samples with more than 20X coverage for each) and generating:
   * An HTML report of quality control detail metrics: percent mapped reads, methylation average of CpG and non-CpG, bisulfite conversion rate, CpG islands/shores bias, coverage bias between all sites and CpG sites, percent SNP overlapping with CpG sites, Top 5 SNPs in each sample.
+  * MDS plots to compare among samples
+  * DNA methylation distribution plots of all CpG sites, CpG island sites, CpG shore sites...
   * A tsv big table of CG/CHH/CHG with filtered/unfiltered SNP
   * SNP calling
   * PMD, LMR, UMR, HMR calling 
   * Bigwig files of whole genome coverage, only CpG coverage, CpG methylation of each sample for IGV visualization
 of these samples
 
-* WGBSX10 is designed for running on cluster such as SGE/PBS. It requires 4GB of memory to maintain the running of the whole workflow.
+* Meth10X is designed for running on cluster such as SGE/PBS. It requires 4GB of memory to maintain the running of the whole workflow.
 
-* WGBSX10 helps to speed up the whole workflow of high coverage WGBS as well as enhance the accurate of methylation and SNP calling.
+* Meth10X helps to speed up the whole workflow of high coverage WGBS as well as enhance the accurate of methylation and SNP calling.
 
-* WGBSX10 is built based on in-house bash/python/perl/R script, Bpipe and a collection of software packages:
+* Meth10X is built based on in-house bash/python/perl/R script, Bpipe and a collection of software packages:
   * [bwa, 0.7.9a]                      https://github.com/lh3/bwa
   * [bwa-meth, 0.10]                   https://github.com/brentp/bwa-meth
   * [samtools, 1.4]                    https://github.com/samtools/
