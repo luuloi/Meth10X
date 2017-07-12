@@ -9,8 +9,20 @@ biocLite("BSgenome.Hsapiens.UCSC.hg38")
 
 ** Download lambda genome for spikein from
 
-ftp://ftp.ncbi.nlm.nih.gov/genomes/Viruses/Enterobacteria_phage_lambda_uid14204/NC_001416.fna
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/Viruses/Enterobacteria_phage_lambda_uid14204/NC_001416.fna
 
-change the header from ">gi|9626243|ref|NC_001416.1| Enterobacteria phage lambda, complete genome" to "lambda"
++ change file name to lambda/lambda.fa
++ open lambda/lambda.fa and change the header from ">gi|9626243|ref|NC_001416.1| Enterobacteria phage lambda, complete genome" to ">lambda"
+
+** run the script prepare_genome_hg38.sh
+
+#!/bin/bash -e
+
+o='/home/phuluu/methods/darlo/annotations/'
+e='/home/phuluu/methods/darlo/annotations/'
+
+qsub -j y -pe smp 20 -l mem_requested=8GB -wd `pwd` -b y -o $o -e $e bash /home/phuluu/methods/darlo/annotations/prepare_genomes_hg38.sh
+
+
 
 
